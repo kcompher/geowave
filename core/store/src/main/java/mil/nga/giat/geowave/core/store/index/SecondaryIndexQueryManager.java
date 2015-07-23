@@ -12,8 +12,8 @@ import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
 import mil.nga.giat.geowave.core.store.query.Query;
 
 /**
- * Manages query the secondary indices given a query.
- * Eventually is replaced by a CBO!
+ * Manages query the secondary indices given a query. Eventually is replaced by
+ * a CBO!
  * 
  * 
  * @param <T>
@@ -22,11 +22,11 @@ import mil.nga.giat.geowave.core.store.query.Query;
 public class SecondaryIndexQueryManager
 {
 	final SecondaryIndexStore secondaryIndexStore;
-	final SecondaryIndexDataStore secondaryIndexDataStore;
+	final IndexDataStore secondaryIndexDataStore;
 
 	public SecondaryIndexQueryManager(
 			final SecondaryIndexStore secondaryIndexStore,
-			final SecondaryIndexDataStore secondaryIndexDataStore ) {
+			final IndexDataStore secondaryIndexDataStore ) {
 		this.secondaryIndexStore = secondaryIndexStore;
 		this.secondaryIndexDataStore = secondaryIndexDataStore;
 	}

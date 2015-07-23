@@ -9,22 +9,22 @@ import mil.nga.giat.geowave.core.index.ByteArrayRange;
 /**
  * This is responsible for persisting secondary index entries
  */
-public interface SecondaryIndexDataStore
+public interface IndexDataStore
 {
 	/**
 	 * 
 	 * @param indexID
 	 * @param ranges
 	 * @param visibility
-	 * @param primaryIndexID
-	 * @param indexRowIds
+	 * @param dataLocationID
+	 * @param dataRowIds
 	 */
 	public void store(
 			ByteArrayId indexID,
 			List<ByteArrayId> ranges,
 			ByteArrayId visibility,
-			ByteArrayId primaryIndexID,
-			List<ByteArrayId> indexRowIds );
+			ByteArrayId dataLocationID,
+			List<ByteArrayId> dataRowIds );
 
 	/**
 	 * 
@@ -32,14 +32,14 @@ public interface SecondaryIndexDataStore
 	 * @param ranges
 	 * @param visibility
 	 * @param primaryIndexID
-	 * @param indexRowIds
+	 * @param dataRowIds
 	 */
 	public void remove(
 			ByteArrayId indexID,
 			List<ByteArrayId> ranges,
 			ByteArrayId visibility,
-			ByteArrayId primaryIndexID,
-			List<ByteArrayId> indexRowIds );
+			ByteArrayId dataLocationID,
+			List<ByteArrayId> dataRowIds );
 
 	/**
 	 * 

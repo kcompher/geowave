@@ -39,7 +39,9 @@ public class SecondaryIndex implements
 
 	public ByteArrayId getId() {
 		return new ByteArrayId(
-				StringUtils.stringToBinary(indexStrategy.getId() + "#" + Joiner.on("#").join(this.fieldIDs)));
+				StringUtils.stringToBinary(indexStrategy.getId() + "#" + Joiner.on(
+						"#").join(
+						this.fieldIDs)));
 	}
 
 	@Override
@@ -66,10 +68,11 @@ public class SecondaryIndex implements
 
 	@Override
 	public byte[] toBinary() {
-		final byte[] indexStrategyBinary = PersistenceUtils.toBinary(indexStrategy);		
-		final byte[] fieldIdBinary = null; // TODO: Joiner.on("#").join(this.fieldIDs).getBytes(Charset.forName("UTF-8"));
+		final byte[] indexStrategyBinary = PersistenceUtils.toBinary(indexStrategy);
+		final byte[] fieldIdBinary = null; // TODO:
+											// Joiner.on("#").join(this.fieldIDs).getBytes(Charset.forName("UTF-8"));
 		final ByteBuffer buf = ByteBuffer.allocate(indexStrategyBinary.length + fieldIdBinary.length + 4);
-		buf.putInt(indexStrategyBinary.length);	
+		buf.putInt(indexStrategyBinary.length);
 		buf.put(indexStrategyBinary);
 		buf.put(fieldIdBinary);
 		return buf.array();
@@ -89,6 +92,7 @@ public class SecondaryIndex implements
 
 		final byte[] fieldIdBinary = new byte[bytes.length - indexStrategyLength - 4];
 		buf.get(fieldIdBinary);
-		fieldIDs = null; // TODO : new String(fieldIdBinary,Charset.forName("UTF-8")).split("#");
+		fieldIDs = null; // TODO : new
+							// String(fieldIdBinary,Charset.forName("UTF-8")).split("#");
 	}
 }

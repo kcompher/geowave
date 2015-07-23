@@ -5,10 +5,11 @@ import mil.nga.giat.geowave.core.index.sfc.data.MultiDimensionalNumericData;
 
 /**
  * Interface which defines a numeric index strategy.
- *
+ * 
  */
 public interface NumericIndexStrategy extends
-		IndexStrategy<MultiDimensionalNumericData, MultiDimensionalNumericData> {
+		IndexStrategy<MultiDimensionalNumericData, MultiDimensionalNumericData>
+{
 
 	/**
 	 * Return an integer coordinate in each dimension for the given insertion ID
@@ -38,4 +39,3 @@ public interface NumericIndexStrategy extends
 	 */
 	public double[] getHighestPrecisionIdRangePerDimension();
 }
-

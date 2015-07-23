@@ -7,7 +7,8 @@ import mil.nga.giat.geowave.core.index.QueryConstraints;
  * numeric data range.
  * 
  */
-public interface MultiDimensionalNumericData extends QueryConstraints
+public interface MultiDimensionalNumericData extends
+		QueryConstraints
 {
 	/**
 	 * @return an array of object QueryRange

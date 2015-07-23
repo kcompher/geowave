@@ -9,11 +9,11 @@ public interface IndexStore<QueryRangeType extends QueryConstraints, EntryRangeT
 	public void addIndex(
 			Index<QueryRangeType, EntryRangeType> index );
 
-	public Index<QueryRangeType, EntryRangeType>  getIndex(
+	public Index<QueryRangeType, EntryRangeType> getIndex(
 			ByteArrayId indexId );
 
 	public boolean indexExists(
 			ByteArrayId indexId );
 
-	public CloseableIterator<Index<QueryRangeType, EntryRangeType> > getIndices();
+	public CloseableIterator<Index<QueryRangeType, EntryRangeType>> getIndices();
 }

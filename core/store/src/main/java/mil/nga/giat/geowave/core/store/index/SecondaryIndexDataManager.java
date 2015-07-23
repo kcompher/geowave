@@ -28,12 +28,12 @@ public class SecondaryIndexDataManager<T> implements
 		ScanCallback<T>
 {
 	private final SecondaryIndexDataAdapter<T> adapter;
-	final SecondaryIndexDataStore secondaryIndexStore;
+	final IndexDataStore secondaryIndexStore;
 	final ByteArrayId primaryIndexId;
 	private final Map<ByteArrayId, SecondaryIndex> indexMap = new HashMap<ByteArrayId, SecondaryIndex>();
 
 	public SecondaryIndexDataManager(
-			final SecondaryIndexDataStore secondaryIndexStore,
+			final IndexDataStore secondaryIndexStore,
 			final SecondaryIndexDataAdapter<T> adapter,
 			final ByteArrayId primaryIndexId ) {
 		this.adapter = adapter;

@@ -6,7 +6,7 @@ import mil.nga.giat.geowave.core.cli.CLIOperationDriver;
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.store.DataStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloCommandLineOptions;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
@@ -68,7 +68,7 @@ public abstract class StatsOperation implements
 	public abstract boolean doWork(
 			AccumuloDataStatisticsStore statsStore,
 			DataStore dataStore,
-			PrimaryIndexStore indexStore,
+			IndexStore indexStore,
 			DataAdapter<?> adapter,
 			String[] authorizations );
 

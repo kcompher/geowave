@@ -15,8 +15,8 @@ import org.apache.accumulo.core.data.Value;
 
 /**
  * 
- * Given a {@link WritableDataAdapter} and an {@link PrimaryIndex}, this class handles
- * the creation of Geowave-formatted [Key,Value] pairs.
+ * Given a {@link WritableDataAdapter} and an {@link PrimaryIndex}, this class
+ * handles the creation of Geowave-formatted [Key,Value] pairs.
  * 
  * The intent is that this class will be used within the Mapper of a MapReduce
  * job to generate Keys and Values to be sorted during the shuffle-and-sort
@@ -57,8 +57,7 @@ public class AccumuloKeyValuePairGenerator<T>
 				entry,
 				visibilityWriter);
 		List<ByteArrayId> rowIds = ingestInfo.getRowIds();
-		@SuppressWarnings("rawtypes")
-		List<FieldInfo> fieldInfoList = ingestInfo.getFieldInfo();
+		List<FieldInfo<?>> fieldInfoList = ingestInfo.getFieldInfo();
 
 		for (ByteArrayId rowId : rowIds) {
 			for (@SuppressWarnings("rawtypes")

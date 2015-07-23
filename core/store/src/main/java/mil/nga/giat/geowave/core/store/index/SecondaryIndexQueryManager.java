@@ -21,11 +21,11 @@ import mil.nga.giat.geowave.core.store.query.Query;
  */
 public class SecondaryIndexQueryManager
 {
-	final SecondaryIndexStore secondaryIndexStore;
+	final IndexStore secondaryIndexStore;
 	final IndexDataStore secondaryIndexDataStore;
 
 	public SecondaryIndexQueryManager(
-			final SecondaryIndexStore secondaryIndexStore,
+			final IndexStore secondaryIndexStore,
 			final IndexDataStore secondaryIndexDataStore ) {
 		this.secondaryIndexStore = secondaryIndexStore;
 		this.secondaryIndexDataStore = secondaryIndexDataStore;
@@ -44,7 +44,7 @@ public class SecondaryIndexQueryManager
 			final Query query,
 			final String... visibility )
 			throws IOException {
-		try (CloseableIterator<Index<CompositeConstraints, List<FieldInfo<?>>>> indicesIt = secondaryIndexStore.getIndices()) {
+		try (CloseableIterator<Index<?, ?>> indicesIt = secondaryIndexStore.getIndices()) {
 			while (indicesIt.hasNext()) {
 				SecondaryIndex index = (SecondaryIndex) indicesIt.next();
 				if (query.isSupported(index)) {

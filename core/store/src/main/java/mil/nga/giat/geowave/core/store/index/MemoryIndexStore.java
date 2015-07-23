@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
-import mil.nga.giat.geowave.core.index.sfc.data.MultiDimensionalNumericData;
 import mil.nga.giat.geowave.core.store.CloseableIterator;
 
 /**
@@ -14,9 +13,9 @@ import mil.nga.giat.geowave.core.store.CloseableIterator;
  * another storage mechanism such as an accumulo table.
  */
 public class MemoryIndexStore implements
-		PrimaryIndexStore
+		IndexStore
 {
-	private final Map<ByteArrayId, Index<MultiDimensionalNumericData, MultiDimensionalNumericData>> indexMap = new HashMap<ByteArrayId, Index<MultiDimensionalNumericData, MultiDimensionalNumericData>>();
+	private final Map<ByteArrayId, Index<?, ?>> indexMap = new HashMap<ByteArrayId, Index<?, ?>>();
 
 	public MemoryIndexStore(
 			final PrimaryIndex[] initialIndices ) {
@@ -27,14 +26,14 @@ public class MemoryIndexStore implements
 
 	@Override
 	public void addIndex(
-			final Index<MultiDimensionalNumericData, MultiDimensionalNumericData> index ) {
+			final Index<?, ?> index ) {
 		indexMap.put(
 				index.getId(),
 				index);
 	}
 
 	@Override
-	public Index<MultiDimensionalNumericData, MultiDimensionalNumericData> getIndex(
+	public Index<?, ?> getIndex(
 			final ByteArrayId indexId ) {
 		return indexMap.get(indexId);
 	}
@@ -46,9 +45,9 @@ public class MemoryIndexStore implements
 	}
 
 	@Override
-	public CloseableIterator<Index<MultiDimensionalNumericData, MultiDimensionalNumericData>> getIndices() {
-		return new CloseableIterator.Wrapper<Index<MultiDimensionalNumericData, MultiDimensionalNumericData>>(
-				new ArrayList<Index<MultiDimensionalNumericData, MultiDimensionalNumericData>>(
+	public CloseableIterator<Index<?, ?>> getIndices() {
+		return new CloseableIterator.Wrapper<Index<?, ?>>(
+				new ArrayList<Index<?, ?>>(
 						indexMap.values()).iterator());
 	}
 

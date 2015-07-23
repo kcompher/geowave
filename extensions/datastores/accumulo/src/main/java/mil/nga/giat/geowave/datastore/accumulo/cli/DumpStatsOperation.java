@@ -5,7 +5,7 @@ import mil.nga.giat.geowave.core.store.CloseableIterator;
 import mil.nga.giat.geowave.core.store.DataStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.statistics.DataStatistics;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloDataStatisticsStore;
 
 /**
@@ -20,7 +20,7 @@ public class DumpStatsOperation extends
 	public boolean doWork(
 			AccumuloDataStatisticsStore statsStore,
 			DataStore dataStore,
-			PrimaryIndexStore indexStore,
+			IndexStore indexStore,
 			DataAdapter<?> adapter,
 			String[] authorizations ) {
 		try (CloseableIterator<DataStatistics<?>> statsIt = statsStore.getAllDataStatistics(authorizations)) {

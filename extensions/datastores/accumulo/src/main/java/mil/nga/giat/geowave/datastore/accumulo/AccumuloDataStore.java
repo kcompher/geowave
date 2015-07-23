@@ -34,8 +34,9 @@ import mil.nga.giat.geowave.core.store.data.VisibilityWriter;
 import mil.nga.giat.geowave.core.store.data.visibility.UnconstrainedVisibilityHandler;
 import mil.nga.giat.geowave.core.store.data.visibility.UniformVisibilityWriter;
 import mil.nga.giat.geowave.core.store.filter.MultiIndexDedupeFilter;
+import mil.nga.giat.geowave.core.store.index.Index;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.core.store.query.Query;
 import mil.nga.giat.geowave.core.store.query.QueryOptions;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloAdapterStore;
@@ -92,7 +93,7 @@ public class AccumuloDataStore implements
 {
 	private final static Logger LOGGER = Logger.getLogger(AccumuloDataStore.class);
 
-	protected final PrimaryIndexStore indexStore;
+	protected final IndexStore indexStore;
 	protected final AdapterStore adapterStore;
 	protected final DataStatisticsStore statisticsStore;
 	protected final AccumuloOperations accumuloOperations;
@@ -125,7 +126,7 @@ public class AccumuloDataStore implements
 	}
 
 	public AccumuloDataStore(
-			final PrimaryIndexStore indexStore,
+			final IndexStore indexStore,
 			final AdapterStore adapterStore,
 			final DataStatisticsStore statisticsStore,
 			final AccumuloOperations accumuloOperations ) {
@@ -138,7 +139,7 @@ public class AccumuloDataStore implements
 	}
 
 	public AccumuloDataStore(
-			final PrimaryIndexStore indexStore,
+			final IndexStore indexStore,
 			final AdapterStore adapterStore,
 			final DataStatisticsStore statisticsStore,
 			final AccumuloOperations accumuloOperations,
@@ -1020,7 +1021,7 @@ public class AccumuloDataStore implements
 			final Integer limit,
 			final ScanCallback<?> scanCallback,
 			final String... authorizations ) {
-		try (final CloseableIterator<PrimaryIndex> indices = indexStore.getIndices()) {
+		try (final CloseableIterator<Index<?, ?>> indices = indexStore.getIndices()) {
 			return query(
 					adapterIds,
 					query,
@@ -1048,7 +1049,7 @@ public class AccumuloDataStore implements
 	private CloseableIterator<?> query(
 			final List<ByteArrayId> adapterIds,
 			final Query query,
-			final CloseableIterator<PrimaryIndex> indices,
+			final CloseableIterator<Index<?, ?>> indices,
 			final AdapterStore adapterStore,
 			final Integer limit,
 			final ScanCallback<?> scanCallback,
@@ -1063,7 +1064,7 @@ public class AccumuloDataStore implements
 		// indices
 		final MultiIndexDedupeFilter clientDedupeFilter = new MultiIndexDedupeFilter();
 		while (indices.hasNext()) {
-			final PrimaryIndex index = indices.next();
+			final PrimaryIndex index = (PrimaryIndex) indices.next();
 			final AccumuloConstraintsQuery accumuloQuery;
 			if (query == null) {
 				accumuloQuery = new AccumuloConstraintsQuery(

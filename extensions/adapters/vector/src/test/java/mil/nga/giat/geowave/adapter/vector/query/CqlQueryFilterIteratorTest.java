@@ -124,7 +124,7 @@ public class CqlQueryFilterIteratorTest
 
 		initScanner(
 				scanner,
-				indexStore.getIndex(new ByteArrayId(
+				(PrimaryIndex) indexStore.getIndex(new ByteArrayId(
 						IndexType.SPATIAL_VECTOR.getDefaultId())),
 				(DataAdapter<SimpleFeature>) adapterStore.getAdapter(new ByteArrayId(
 						"CqlQueryFilterIteratorTest")),

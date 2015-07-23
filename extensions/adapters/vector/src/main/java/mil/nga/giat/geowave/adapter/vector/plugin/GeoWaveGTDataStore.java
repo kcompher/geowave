@@ -33,6 +33,7 @@ import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.statistics.DataStatisticsStore;
 import mil.nga.giat.geowave.core.store.dimension.NumericDimensionField;
+import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
 import mil.nga.giat.geowave.datastore.accumulo.BasicAccumuloOperations;
@@ -289,11 +290,11 @@ public class GeoWaveGTDataStore extends
 				StringUtils.stringToBinary(typeName)));
 		if (adapter != null) {
 			final String[] authorizations = getAuthorizationSPI().getAuthorizations();
-			try (CloseableIterator<PrimaryIndex> indicesIt = dataStore.getIndices()) {
+			try (CloseableIterator<Index<?, ?>> indicesIt = dataStore.getIndices()) {
 				while (indicesIt.hasNext()) {
 					dataStore.deleteEntries(
 							adapter,
-							indicesIt.next(),
+							(PrimaryIndex) indicesIt.next(),
 							authorizations);
 				}
 			}
@@ -351,10 +352,10 @@ public class GeoWaveGTDataStore extends
 
 		final boolean needTime = adapter.hasTemporalConstraints();
 
-		try (CloseableIterator<PrimaryIndex> indices = dataStore.getIndices()) {
+		try (CloseableIterator<Index<?, ?>> indices = dataStore.getIndices()) {
 			boolean currentSelectionHasTime = false;
 			while (indices.hasNext()) {
-				final PrimaryIndex index = indices.next();
+				final PrimaryIndex index = (PrimaryIndex) indices.next();
 				@SuppressWarnings("rawtypes")
 				final NumericDimensionField[] dims = index.getIndexModel().getDimensions();
 				boolean hasLat = false;

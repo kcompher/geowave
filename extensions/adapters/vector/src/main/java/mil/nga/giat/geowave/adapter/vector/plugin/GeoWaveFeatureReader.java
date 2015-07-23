@@ -28,6 +28,7 @@ import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.StringUtils;
 import mil.nga.giat.geowave.core.store.CloseableIterator;
 import mil.nga.giat.geowave.core.store.adapter.statistics.DataStatistics;
+import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 import mil.nga.giat.geowave.core.store.query.BasicQuery;
 import mil.nga.giat.geowave.core.store.query.BasicQuery.Constraints;
@@ -138,9 +139,9 @@ public class GeoWaveFeatureReader implements
 		final List<CloseableIterator<SimpleFeature>> results = new ArrayList<CloseableIterator<SimpleFeature>>();
 		final Map<ByteArrayId, DataStatistics<SimpleFeature>> statsMap = components.getDataStatistics(transaction);
 
-		try (CloseableIterator<PrimaryIndex> indexIt = getComponents().getDataStore().getIndices()) {
+		try (CloseableIterator<Index<?, ?>> indexIt = getComponents().getDataStore().getIndices()) {
 			while (indexIt.hasNext()) {
-				final PrimaryIndex index = indexIt.next();
+				final PrimaryIndex index = (PrimaryIndex) indexIt.next();
 
 				final Constraints timeConstraints = QueryIndexHelper.composeTimeBoundedConstraints(
 						components.getAdapter().getType(),

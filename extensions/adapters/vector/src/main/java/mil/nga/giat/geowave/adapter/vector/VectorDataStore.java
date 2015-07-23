@@ -18,8 +18,9 @@ import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.MemoryAdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.statistics.DataStatisticsStore;
+import mil.nga.giat.geowave.core.store.index.Index;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.core.store.query.Query;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
@@ -48,7 +49,7 @@ public class VectorDataStore extends
 	private final static Logger LOGGER = Logger.getLogger(VectorDataStore.class);
 
 	public VectorDataStore(
-			final PrimaryIndexStore indexStore,
+			final IndexStore indexStore,
 			final AdapterStore adapterStore,
 			final DataStatisticsStore statisticsStore,
 			final AccumuloOperations accumuloOperations ) {
@@ -60,7 +61,7 @@ public class VectorDataStore extends
 	}
 
 	public VectorDataStore(
-			final PrimaryIndexStore indexStore,
+			final IndexStore indexStore,
 			final AdapterStore adapterStore,
 			final DataStatisticsStore statisticsStore,
 			final AccumuloOperations accumuloOperations,
@@ -87,7 +88,7 @@ public class VectorDataStore extends
 				accumuloOptions);
 	}
 
-	public CloseableIterator<PrimaryIndex> getIndices() {
+	public CloseableIterator<Index<?, ?>> getIndices() {
 		return indexStore.getIndices();
 	}
 

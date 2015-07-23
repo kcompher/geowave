@@ -42,8 +42,9 @@ import mil.nga.giat.geowave.core.store.filter.FilterList;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 import mil.nga.giat.geowave.core.store.index.CommonIndexModel;
 import mil.nga.giat.geowave.core.store.index.CommonIndexValue;
+import mil.nga.giat.geowave.core.store.index.Index;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.core.store.query.Query;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
@@ -300,7 +301,7 @@ public class AccumuloUtils
 			adapterMatchVerified = true;
 			adapterId = null;
 		}
-		final List<FieldInfo> fieldInfoList = new ArrayList<FieldInfo>(
+		final List<FieldInfo<?>> fieldInfoList = new ArrayList<FieldInfo<?>>(
 				rowMapping.size());
 
 		for (final Entry<Key, Value> entry : rowMapping.entrySet()) {
@@ -512,12 +513,12 @@ public class AccumuloUtils
 			final byte[] adapterId,
 			final DataStoreEntryInfo ingestInfo ) {
 		final List<Mutation> mutations = new ArrayList<Mutation>();
-		final List<FieldInfo> fieldInfoList = ingestInfo.getFieldInfo();
+		final List<FieldInfo<?>> fieldInfoList = ingestInfo.getFieldInfo();
 		for (final ByteArrayId rowId : ingestInfo.getRowIds()) {
 			final Mutation mutation = new Mutation(
 					new Text(
 							rowId.getBytes()));
-			for (final FieldInfo fieldInfo : fieldInfoList) {
+			for (final FieldInfo<?> fieldInfo : fieldInfoList) {
 				mutation.put(
 						new Text(
 								adapterId),
@@ -619,7 +620,7 @@ public class AccumuloUtils
 		final List<PersistentValue> extendedValues = extendedData.getValues();
 		final List<PersistentValue> commonValues = indexedData.getValues();
 
-		final List<FieldInfo> fieldInfoList = new ArrayList<FieldInfo>();
+		final List<FieldInfo<?>> fieldInfoList = new ArrayList<FieldInfo<?>>();
 
 		if (!insertionIds.isEmpty()) {
 			addToRowIds(
@@ -784,17 +785,17 @@ public class AccumuloUtils
 	 * @param connector
 	 * @param namespace
 	 */
-	public static List<PrimaryIndex> getIndices(
+	public static List<Index<?, ?>> getIndices(
 			final Connector connector,
 			final String namespace ) {
-		final List<PrimaryIndex> indices = new ArrayList<PrimaryIndex>();
+		final List<Index<?, ?>> indices = new ArrayList<Index<?, ?>>();
 
-		final PrimaryIndexStore indexStore = new AccumuloIndexStore(
+		final IndexStore indexStore = new AccumuloIndexStore(
 				new BasicAccumuloOperations(
 						connector,
 						namespace));
 
-		final Iterator<PrimaryIndex> itr = indexStore.getIndices();
+		final Iterator<Index<?, ?>> itr = indexStore.getIndices();
 
 		while (itr.hasNext()) {
 			indices.add(itr.next());

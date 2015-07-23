@@ -5,8 +5,9 @@ import mil.nga.giat.geowave.core.store.CloseableIterator;
 import mil.nga.giat.geowave.core.store.DataStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.statistics.StatsCompositionTool;
+import mil.nga.giat.geowave.core.store.index.Index;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.core.store.query.Query;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloDataStatisticsStore;
 
@@ -30,7 +31,7 @@ public class ReCalculateStatsOperation extends
 	public boolean doWork(
 			AccumuloDataStatisticsStore statsStore,
 			DataStore dataStore,
-			PrimaryIndexStore indexStore,
+			IndexStore indexStore,
 			DataAdapter<?> adapter,
 			String[] authorizations ) {
 		statsStore.deleteObjects(
@@ -39,9 +40,9 @@ public class ReCalculateStatsOperation extends
 		try (StatsCompositionTool<?> statsTool = new StatsCompositionTool(
 				adapter,
 				statsStore)) {
-			try (CloseableIterator<PrimaryIndex> indexit = indexStore.getIndices()) {
+			try (CloseableIterator<Index<?, ?>> indexit = indexStore.getIndices()) {
 				while (indexit.hasNext()) {
-					final PrimaryIndex index = indexit.next();
+					final PrimaryIndex index = (PrimaryIndex) indexit.next();
 					try (CloseableIterator<?> entryIt = dataStore.query(
 							adapter,
 							index,

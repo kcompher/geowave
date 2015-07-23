@@ -1,19 +1,18 @@
 package mil.nga.giat.geowave.core.store.index;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
-import mil.nga.giat.geowave.core.index.QueryConstraints;
 import mil.nga.giat.geowave.core.store.CloseableIterator;
 
-public interface IndexStore<QueryRangeType extends QueryConstraints, EntryRangeType>
+public interface IndexStore
 {
 	public void addIndex(
-			Index<QueryRangeType, EntryRangeType> index );
+			Index<?, ?> index );
 
-	public Index<QueryRangeType, EntryRangeType> getIndex(
+	public Index<?, ?> getIndex(
 			ByteArrayId indexId );
 
 	public boolean indexExists(
 			ByteArrayId indexId );
 
-	public CloseableIterator<Index<QueryRangeType, EntryRangeType>> getIndices();
+	public CloseableIterator<Index<?, ?>> getIndices();
 }

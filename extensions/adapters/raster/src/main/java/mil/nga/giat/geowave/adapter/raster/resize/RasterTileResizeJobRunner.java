@@ -1,5 +1,7 @@
 package mil.nga.giat.geowave.adapter.raster.resize;
 
+import java.io.IOException;
+
 import mil.nga.giat.geowave.adapter.raster.adapter.RasterDataAdapter;
 import mil.nga.giat.geowave.adapter.raster.adapter.merge.nodata.NoDataMergeStrategy;
 import mil.nga.giat.geowave.core.index.ByteArrayId;
@@ -7,6 +9,7 @@ import mil.nga.giat.geowave.core.store.CloseableIterator;
 import mil.nga.giat.geowave.core.store.DataStore;
 import mil.nga.giat.geowave.core.store.IndexWriter;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
+import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
@@ -29,8 +32,6 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 import org.opengis.coverage.grid.GridCoverage;
-
-import java.io.IOException;
 
 public class RasterTileResizeJobRunner extends
 		Configured implements
@@ -145,14 +146,14 @@ public class RasterTileResizeJobRunner extends
 				newAdapter);
 		PrimaryIndex index = null;
 		if (indexId != null) {
-			index = new AccumuloIndexStore(
+			index = (PrimaryIndex) new AccumuloIndexStore(
 					oldNamespaceOperations).getIndex(new ByteArrayId(
 					indexId));
 		}
 		if (index == null) {
-			try (CloseableIterator<PrimaryIndex> indices = new AccumuloIndexStore(
+			try (CloseableIterator<Index<?, ?>> indices = new AccumuloIndexStore(
 					oldNamespaceOperations).getIndices()) {
-				index = indices.next();
+				index = (PrimaryIndex) indices.next();
 			}
 			if (index == null) {
 				throw new IllegalArgumentException(

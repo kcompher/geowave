@@ -3,15 +3,15 @@ package mil.nga.giat.geowave.adapter.raster;
 import java.util.TreeMap;
 
 import mil.nga.giat.geowave.core.index.HierarchicalNumericIndexStrategy;
-import mil.nga.giat.geowave.core.index.NumericIndexStrategy;
 import mil.nga.giat.geowave.core.index.HierarchicalNumericIndexStrategy.SubStrategy;
+import mil.nga.giat.geowave.core.index.NumericIndexStrategy;
 import mil.nga.giat.geowave.core.store.CloseableIterator;
 import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.statistics.DataStatisticsStore;
 import mil.nga.giat.geowave.core.store.index.CustomIdIndex;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.core.store.query.Query;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
@@ -36,7 +36,7 @@ public class RasterDataStore extends
 	}
 
 	public RasterDataStore(
-			final PrimaryIndexStore indexStore,
+			final IndexStore indexStore,
 			final AdapterStore adapterStore,
 			final DataStatisticsStore statisticsStore,
 			final AccumuloOperations accumuloOperations,
@@ -50,7 +50,7 @@ public class RasterDataStore extends
 	}
 
 	public RasterDataStore(
-			final PrimaryIndexStore indexStore,
+			final IndexStore indexStore,
 			final AdapterStore adapterStore,
 			final DataStatisticsStore statisticsStore,
 			final AccumuloOperations accumuloOperations ) {

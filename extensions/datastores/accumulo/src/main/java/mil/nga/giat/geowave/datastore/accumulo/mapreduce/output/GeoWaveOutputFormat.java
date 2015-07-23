@@ -12,8 +12,9 @@ import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.WritableDataAdapter;
 import mil.nga.giat.geowave.core.store.adapter.statistics.DataStatisticsStore;
+import mil.nga.giat.geowave.core.store.index.Index;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.GeoWaveConfiguratorBase;
@@ -64,7 +65,7 @@ public class GeoWaveOutputFormat extends
 					accumuloAdapterStore.addAdapter(a);
 				}
 			}
-			final PrimaryIndexStore accumuloIndexStore = new AccumuloIndexStore(
+			final IndexStore accumuloIndexStore = new AccumuloIndexStore(
 					accumuloOperations);
 			final PrimaryIndex[] indices = JobContextIndexStore.getIndices(context);
 			for (final PrimaryIndex i : indices) {
@@ -75,7 +76,7 @@ public class GeoWaveOutputFormat extends
 			final AdapterStore jobContextAdapterStore = getDataAdapterStore(
 					context,
 					accumuloOperations);
-			final PrimaryIndexStore jobContextIndexStore = getIndexStore(
+			final IndexStore jobContextIndexStore = getIndexStore(
 					context,
 					accumuloOperations);
 			final DataStatisticsStore statisticsStore = new AccumuloDataStatisticsStore(
@@ -109,7 +110,7 @@ public class GeoWaveOutputFormat extends
 				adapter);
 	}
 
-	protected static PrimaryIndexStore getIndexStore(
+	protected static IndexStore getIndexStore(
 			final JobContext context,
 			final AccumuloOperations accumuloOperations ) {
 		return new JobContextIndexStore(
@@ -174,13 +175,13 @@ public class GeoWaveOutputFormat extends
 	{
 		private final Map<ByteArrayId, IndexWriter> indexWriterCache = new HashMap<ByteArrayId, IndexWriter>();
 		private final AdapterStore adapterStore;
-		private final PrimaryIndexStore indexStore;
+		private final IndexStore indexStore;
 		private final DataStore dataStore;
 
 		protected GeoWaveRecordWriter(
 				final TaskAttemptContext context,
 				final AccumuloOperations accumuloOperations,
-				final PrimaryIndexStore indexStore,
+				final IndexStore indexStore,
 				final AdapterStore adapterStore,
 				final DataStatisticsStore statisticsStore )
 				throws AccumuloException,
@@ -234,10 +235,10 @@ public class GeoWaveOutputFormat extends
 		private synchronized IndexWriter getIndexWriter(
 				final ByteArrayId indexId ) {
 			if (!indexWriterCache.containsKey(indexId)) {
-				final PrimaryIndex index = indexStore.getIndex(indexId);
+				final Index<?, ?> index = indexStore.getIndex(indexId);
 				IndexWriter writer = null;
 				if (index != null) {
-					writer = dataStore.createIndexWriter(index);
+					writer = dataStore.createIndexWriter((PrimaryIndex) index);
 				}
 				else {
 					LOGGER.warn("Index '" + StringUtils.stringFromBinary(indexId.getBytes()) + "' does not exist");

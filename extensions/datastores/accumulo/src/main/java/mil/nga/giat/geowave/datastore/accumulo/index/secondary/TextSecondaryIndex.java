@@ -1,21 +1,37 @@
 package mil.nga.giat.geowave.datastore.accumulo.index.secondary;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import mil.nga.giat.geowave.core.index.ByteArrayId;
+import mil.nga.giat.geowave.core.index.StringUtils;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
 import mil.nga.giat.geowave.datastore.accumulo.Writer;
 
 import org.apache.accumulo.core.client.TableNotFoundException;
+import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.ngram.NGramTokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 public class TextSecondaryIndex extends
 		AbstractSecondaryIndex<String>
 {
+	private final static Logger LOGGER = Logger.getLogger(TextSecondaryIndex.class);
 	public static final String TABLE_NAME = TABLE_PREFIX + "TEXT";
 	private static TextSecondaryIndex instance;
+	private final NGramTokenizer nGramTokenizer;
 
 	private TextSecondaryIndex(
-			Writer writer ) {
+			Writer writer,
+			int minGram,
+			int maxGram ) {
 		super(
 				writer);
+		nGramTokenizer = new NGramTokenizer(
+				minGram,
+				maxGram);
 	}
 
 	/**
@@ -27,7 +43,9 @@ public class TextSecondaryIndex extends
 	 *             if unable to construct the necessary {@link Writer}
 	 */
 	public static TextSecondaryIndex getInstance(
-			final AccumuloOperations accumuloOperations )
+			final AccumuloOperations accumuloOperations,
+			int minGram,
+			int maxGram )
 			throws InstantiationException {
 		if (instance == null) {
 			try {
@@ -35,7 +53,9 @@ public class TextSecondaryIndex extends
 						accumuloOperations.createWriter(
 								TABLE_NAME,
 								true,
-								false));
+								false),
+						minGram,
+						maxGram);
 			}
 			catch (TableNotFoundException e) {
 				throw new InstantiationException(
@@ -52,20 +72,41 @@ public class TextSecondaryIndex extends
 			final String attributeName,
 			final ByteArrayId rowId ) {
 
-		// TODO most likely will need to override write() method for text
+		String stringValue = (String) attributeValue;
+		List<String> tokens = new ArrayList<>();
 
-		super.write(
-				attributeValue,
-				attributeType,
-				attributeName,
-				rowId);
+		try {
+			nGramTokenizer.setReader(new StringReader(
+					stringValue));
+			CharTermAttribute charTermAttribute = nGramTokenizer.addAttribute(CharTermAttribute.class);
+			nGramTokenizer.reset();
+
+			while (nGramTokenizer.incrementToken()) {
+				tokens.add(charTermAttribute.toString());
+			}
+			nGramTokenizer.end();
+			nGramTokenizer.close();
+
+			for (String token : tokens) {
+				super.write(
+						token,
+						attributeType,
+						attributeName,
+						rowId);
+			}
+		}
+		catch (IOException e) {
+			LOGGER.error(
+					"Could not generate n-grams",
+					e);
+		}
+
 	}
 
 	@Override
 	public byte[] constructRowId(
 			String attributeValue ) {
-		// TODO Implement
-		return null;
+		return StringUtils.stringToBinary(attributeValue);
 	}
 
 }

@@ -12,9 +12,10 @@ import mil.nga.giat.geowave.adapter.vector.FeatureDataAdapter;
 import mil.nga.giat.geowave.adapter.vector.VectorDataStore;
 import mil.nga.giat.geowave.core.geotime.GeometryUtils;
 import mil.nga.giat.geowave.core.geotime.IndexType;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
+import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.datastore.accumulo.index.secondary.NumericSecondaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.index.secondary.TemporalSecondaryIndex;
+import mil.nga.giat.geowave.datastore.accumulo.index.secondary.TextSecondaryIndex;
 import mil.nga.giat.geowave.test.GeoWaveTestEnvironment;
 
 import org.apache.accumulo.core.client.AccumuloException;
@@ -40,7 +41,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * integration test for secondary indexing once the capability matures
  * 
  * @author yeagerdc
- *
+ * 
  */
 public class SecondaryIndexingDriver extends
 		GeoWaveTestEnvironment
@@ -77,10 +78,10 @@ public class SecondaryIndexingDriver extends
 				Boolean.TRUE);
 
 		// mark text attribute for secondary indexing
-		// schema.getDescriptor(
-		// "affiliation").getUserData().put(
-		// "index",
-		// Boolean.TRUE);
+		schema.getDescriptor(
+				"affiliation").getUserData().put(
+				"index",
+				Boolean.TRUE);
 
 		FeatureDataAdapter dataAdapter = new FeatureDataAdapter(
 				schema);
@@ -88,7 +89,7 @@ public class SecondaryIndexingDriver extends
 		VectorDataStore dataStore = new VectorDataStore(
 				accumuloOperations);
 
-		final PrimaryIndex index = IndexType.SPATIAL_VECTOR.createDefaultIndex();
+		final Index index = IndexType.SPATIAL_VECTOR.createDefaultIndex();
 
 		List<SimpleFeature> features = new ArrayList<>();
 		for (int x = 0; x < NUM_FEATURES; x++) {
@@ -128,6 +129,13 @@ public class SecondaryIndexingDriver extends
 
 		int numTemporalEntries = countNumberOfEntriesInIndexTable(TemporalSecondaryIndex.TABLE_NAME);
 		Assert.assertTrue(numTemporalEntries == NUM_FEATURES);
+
+		int numTrigrams = 9; // text "a few words" produces 9 unique tri-grams:
+		// {'a f', ' fe', 'few', 'ew ', 'w w', ' wo',
+		// 'wor', 'ord', 'rds'}
+		int numTextEntries = countNumberOfEntriesInIndexTable(TextSecondaryIndex.TABLE_NAME);
+		// all features have the same affiliation text
+		Assert.assertTrue(numTextEntries == (NUM_FEATURES * numTrigrams));
 	}
 
 	private int countNumberOfEntriesInIndexTable(
@@ -169,7 +177,7 @@ public class SecondaryIndexingDriver extends
 				"10-15");
 		builder.set(
 				"affiliation",
-				"blah blah");
+				"a few words");
 
 		return builder.buildFeature(UUID.randomUUID().toString());
 	}

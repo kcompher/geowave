@@ -36,7 +36,10 @@ public class SecondaryIndexingIngestCallback implements
 		allWriters.add(numericSecondaryIndex.getWriter());
 		temporalSecondaryIndex = TemporalSecondaryIndex.getInstance(accumuloOperations);
 		allWriters.add(temporalSecondaryIndex.getWriter());
-		textSecondaryIndex = TextSecondaryIndex.getInstance(accumuloOperations);
+		textSecondaryIndex = TextSecondaryIndex.getInstance(
+				accumuloOperations,
+				3,
+				3); // FIXME hard-coded for now
 		allWriters.add(textSecondaryIndex.getWriter());
 	}
 

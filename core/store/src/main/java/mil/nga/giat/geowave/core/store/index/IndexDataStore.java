@@ -5,6 +5,8 @@ import java.util.Map;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
+import mil.nga.giat.geowave.core.index.QueryConstraints;
+import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
 
 /**
  * This is responsible for persisting secondary index entries
@@ -24,7 +26,8 @@ public interface IndexDataStore
 			List<ByteArrayId> ranges,
 			ByteArrayId visibility,
 			ByteArrayId dataLocationID,
-			List<ByteArrayId> dataRowIds );
+			List<ByteArrayId> dataRowIds,
+			List<FieldInfo<?>> attributeInfos );
 
 	/**
 	 * 
@@ -39,7 +42,8 @@ public interface IndexDataStore
 			List<ByteArrayId> ranges,
 			ByteArrayId visibility,
 			ByteArrayId dataLocationID,
-			List<ByteArrayId> dataRowIds );
+			List<ByteArrayId> dataRowIds,
+			List<FieldInfo<?>> attributeInfos );
 
 	/**
 	 * 
@@ -47,10 +51,12 @@ public interface IndexDataStore
 	 *            secondary index ID
 	 * @param ranges
 	 * @param visibility
+	 * @param used for additional filtering
 	 * @return Primary Index ID associated Range Values
 	 */
 	public Map<ByteArrayId, List<ByteArrayRange>> query(
 			ByteArrayId indexID,
 			List<ByteArrayRange> ranges,
+			QueryConstraints constraints,
 			String... visibility );
 }

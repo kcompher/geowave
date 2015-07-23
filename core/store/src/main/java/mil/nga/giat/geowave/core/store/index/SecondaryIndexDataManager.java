@@ -70,7 +70,8 @@ public class SecondaryIndexDataManager<T> implements
 					ranges,
 					visibility,
 					primaryIndexId,
-					entryInfo.getRowIds());
+					entryInfo.getRowIds(),
+					infos);
 		}
 
 	}
@@ -114,7 +115,8 @@ public class SecondaryIndexDataManager<T> implements
 					ranges,
 					visibility,
 					primaryIndexId,
-					entryInfo.getRowIds());
+					entryInfo.getRowIds(),
+					infos);
 		}
 	}
 

@@ -48,10 +48,10 @@ public class SecondaryIndexQueryManager
 			while (indicesIt.hasNext()) {
 				SecondaryIndex index = (SecondaryIndex) indicesIt.next();
 				if (query.isSupported(index)) {
-					List<ByteArrayRange> ranges = query.getSecondaryIndexConstraints(index);
 					return secondaryIndexDataStore.query(
 							index.getId(),
-							ranges,
+							query.getSecondaryIndexConstraints(index),
+							query.getSecondaryQueryConstraints(index),
 							visibility);
 				}
 			}

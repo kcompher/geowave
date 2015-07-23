@@ -276,7 +276,13 @@ public class BasicQuery implements
 				getSecondaryIndexCompositeConstraints(index));
 	}
 
-	private CompositeConstraints getSecondaryIndexCompositeConstraints(
+	@Override
+	public QueryConstraints getSecondaryQueryConstraints(
+			SecondaryIndex index ) {
+		return getSecondaryIndexCompositeConstraints(index);
+	}
+
+	public CompositeConstraints getSecondaryIndexCompositeConstraints(
 			SecondaryIndex index ) {
 		List<QueryConstraints> constraints = new ArrayList<QueryConstraints>(
 				index.getFieldIDs().length);

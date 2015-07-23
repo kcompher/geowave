@@ -19,7 +19,7 @@ public class FieldIdStatisticVisibility<T> implements
 	public byte[] getVisibility(
 			final DataStoreEntryInfo entryInfo,
 			final T entry ) {
-		for (final FieldInfo<T> f : entryInfo.getFieldInfo()) {
+		for (final FieldInfo<?> f : entryInfo.getFieldInfo()) {
 			if (f.getDataValue().getId().equals(
 					fieldId)) {
 				return f.getVisibility();

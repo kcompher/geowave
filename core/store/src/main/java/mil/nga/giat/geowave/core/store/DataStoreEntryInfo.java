@@ -36,11 +36,11 @@ public class DataStoreEntryInfo
 	}
 
 	private final List<ByteArrayId> rowIds;
-	private final List<FieldInfo> fieldInfo;
+	private final List<FieldInfo<?>> fieldInfo;
 
 	public DataStoreEntryInfo(
 			final List<ByteArrayId> rowIds,
-			final List<FieldInfo> fieldInfo ) {
+			final List<FieldInfo<?>> fieldInfo ) {
 		this.rowIds = rowIds;
 		this.fieldInfo = fieldInfo;
 	}
@@ -49,7 +49,7 @@ public class DataStoreEntryInfo
 		return rowIds;
 	}
 
-	public List<FieldInfo> getFieldInfo() {
+	public List<FieldInfo<?>> getFieldInfo() {
 		return fieldInfo;
 	}
 }

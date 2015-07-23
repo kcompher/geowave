@@ -61,16 +61,15 @@ public class SecondaryIndex implements
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final FieldIndexStrategy other = (FieldIndexStrategy) obj;
-		return getId().equals(
+		final SecondaryIndex other = (SecondaryIndex) obj;
+		return this.getId().equals(
 				other.getId());
 	}
 
 	@Override
 	public byte[] toBinary() {
 		final byte[] indexStrategyBinary = PersistenceUtils.toBinary(indexStrategy);
-		final byte[] fieldIdBinary = null; // TODO:
-											// Joiner.on("#").join(this.fieldIDs).getBytes(Charset.forName("UTF-8"));
+		final byte[] fieldIdBinary = ByteArrayId.toBytes(fieldIDs);
 		final ByteBuffer buf = ByteBuffer.allocate(indexStrategyBinary.length + fieldIdBinary.length + 4);
 		buf.putInt(indexStrategyBinary.length);
 		buf.put(indexStrategyBinary);
@@ -92,7 +91,7 @@ public class SecondaryIndex implements
 
 		final byte[] fieldIdBinary = new byte[bytes.length - indexStrategyLength - 4];
 		buf.get(fieldIdBinary);
-		fieldIDs = null; // TODO : new
-							// String(fieldIdBinary,Charset.forName("UTF-8")).split("#");
+		fieldIDs = ByteArrayId.fromBytes(fieldIdBinary);
 	}
+
 }

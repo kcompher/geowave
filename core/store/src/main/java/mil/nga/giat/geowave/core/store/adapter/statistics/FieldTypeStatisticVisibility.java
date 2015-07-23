@@ -18,7 +18,7 @@ public class FieldTypeStatisticVisibility<T> implements
 	public byte[] getVisibility(
 			final DataStoreEntryInfo entryInfo,
 			final T entry ) {
-		for (final FieldInfo<T> f : entryInfo.getFieldInfo()) {
+		for (final FieldInfo<?> f : entryInfo.getFieldInfo()) {
 			if ((f.getDataValue().getValue() != null) && fieldType.isAssignableFrom(f.getDataValue().getValue().getClass())) {
 				return f.getVisibility();
 			}

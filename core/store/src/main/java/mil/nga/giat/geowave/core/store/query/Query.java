@@ -4,7 +4,6 @@ import java.util.List;
 
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
 import mil.nga.giat.geowave.core.index.NumericIndexStrategy;
-import mil.nga.giat.geowave.core.index.QueryConstraints;
 import mil.nga.giat.geowave.core.index.sfc.data.MultiDimensionalNumericData;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 import mil.nga.giat.geowave.core.store.index.CommonIndexModel;
@@ -69,7 +68,7 @@ public interface Query
 	public List<ByteArrayRange> getSecondaryIndexConstraints(
 			SecondaryIndex index );
 
-	public QueryConstraints getSecondaryQueryConstraints(
+	public List<QueryFilter> getSecondaryQueryFilter(
 			SecondaryIndex index );
 
 }

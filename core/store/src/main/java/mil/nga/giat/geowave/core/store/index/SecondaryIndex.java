@@ -15,7 +15,7 @@ import com.google.common.base.Joiner;
  * The key components are the indexing strategy and the common index model.
  */
 public class SecondaryIndex implements
-		Index<CompositeConstraints, List<FieldInfo<?>>>
+		Index<FilterableConstraints, List<FieldInfo<?>>>
 {
 	protected FieldIndexStrategy indexStrategy;
 	protected ByteArrayId[] fieldIDs;

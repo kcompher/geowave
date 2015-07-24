@@ -51,7 +51,7 @@ public class SecondaryIndexQueryManager
 					return secondaryIndexDataStore.query(
 							index.getId(),
 							query.getSecondaryIndexConstraints(index),
-							query.getSecondaryQueryConstraints(index),
+							query.getSecondaryQueryFilter(index),
 							visibility);
 				}
 			}

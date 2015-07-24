@@ -10,7 +10,7 @@ import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
  * 
  */
 public interface FieldIndexStrategy extends
-		IndexStrategy<CompositeConstraints, List<FieldInfo<?>>>
+		IndexStrategy<FilterableConstraints, List<FieldInfo<?>>>
 {
 
 }

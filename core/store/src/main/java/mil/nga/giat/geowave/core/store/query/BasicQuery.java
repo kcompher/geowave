@@ -277,9 +277,10 @@ public class BasicQuery implements
 	}
 
 	@Override
-	public QueryConstraints getSecondaryQueryConstraints(
+	public List<QueryFilter> getSecondaryQueryFilter(
 			SecondaryIndex index ) {
-		return getSecondaryIndexCompositeConstraints(index);
+		return Collections.singletonList(getSecondaryIndexCompositeConstraints(
+				index).getFilter());
 	}
 
 	public CompositeConstraints getSecondaryIndexCompositeConstraints(

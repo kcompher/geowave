@@ -645,6 +645,7 @@
 		<module>analytics</module>
 		<module>core</module>
 		<module>deploy</module>
+		<module>dev-resources</module>
 		<module>examples</module>
 		<module>extensions</module>
 		<module>services</module>

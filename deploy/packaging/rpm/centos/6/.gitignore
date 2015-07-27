@@ -1,6 +1,7 @@
 *.jar
 *.zip
 *.tar.gz
+*.war
 BUILD/
 BUILDROOT/
 RPMS/

@@ -42,6 +42,9 @@ yum --enablerepo=geowave install geowave-0.8.7-cdh5-*
 |geowave-*-docs
 |Documentation (HTML, PDF and man pages)
 
+|geowave-*-dev-resources
+|Web app with various development resources
+
 |geowave-*-tools
 |Command Line Tools (ingest, etc.)
 

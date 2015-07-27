@@ -27,7 +27,7 @@ Version:        %{version}
 Release:        %{timestamp}
 BuildRoot:      %{buildroot}
 BuildArch:      noarch
-Summary:        GeoWave provides geospatial and temporal indexing on top of Accumulo
+Summary:        GeoWave is a library for storage, index, and search of multi-dimensional data on top of a sorted key-value datastore
 License:        Apache2
 Group:          Applications/Internet
 Source0:        geowave-accumulo.jar
@@ -46,13 +46,14 @@ Source12:       puppet-scripts.tar.gz
 Source13:       manpages.tar.gz
 Source14:       plugins.tar.gz
 Source15:       geowave-analytic-mapreduce.jar
+Source16:       geowave-dev-resources.war
 BuildRequires:  unzip
 BuildRequires:  zip
 BuildRequires:  xmlto
 BuildRequires:  asciidoc
 
 %description
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
+GeoWave is a library for storage, index, and search of multi-dimensional data on top of a sorted key-value datastore
 
 %prep
 rm -rf %{_rpmdir}/%{buildarch}/%{versioned_app_name}*
@@ -80,6 +81,8 @@ unzip -p %{SOURCE0} build.properties > %{buildroot}%{geowave_accumulo_home}/geow
 # Unpack and rename prepackaged jetty/geoserver
 unzip -qq  %{SOURCE2} -d %{buildroot}%{geowave_install}
 mv %{buildroot}%{geowave_geoserver_home}-* %{buildroot}%{geowave_geoserver_home}
+# Copy dev-resources webapp into jetty as well
+cp %{SOURCE16} %{buildroot}%{geowave_geoserver_home}/webapps
 
 # patch some config settings
 sed -i 's/yyyy_mm_dd.//g' %{buildroot}%{geowave_geoserver_home}/etc/jetty.xml
@@ -148,9 +151,7 @@ Requires:       %{versioned_app_name}-jetty = %{version}
 Requires:       %{versioned_app_name}-tools = %{version}
 
 %description -n %{versioned_app_name}-single-host
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
-This package installs the accumulo, geoserver and tools components and
-would likely be useful for dev environments
+Installs the accumulo, geoserver and tools components and would likely be useful for dev environments
 
 %files -n %{versioned_app_name}-single-host
 # This is a meta-package and only exists to install other packages
@@ -165,8 +166,7 @@ Requires:       %{versioned_app_name}-tools = %{version}
 Requires:       core
 
 %description -n %{versioned_app_name}-accumulo
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
-This package installs the Accumulo components of GeoWave
+Installs the Accumulo components of GeoWave
 
 %post -n %{versioned_app_name}-accumulo
 /bin/bash %{geowave_accumulo_home}/deploy-geowave-to-hdfs.sh >> %{geowave_accumulo_home}/geowave-to-hdfs.log 2>&1
@@ -187,8 +187,7 @@ Group:          Applications/Internet
 Provides:       core = %{version}
 
 %description core
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
-This package installs the GeoWave home directory and user account
+Installs the GeoWave home directory and user account
 
 %pre core
 getent group geowave > /dev/null || /usr/sbin/groupadd -r geowave
@@ -215,8 +214,7 @@ Requires:       %{versioned_app_name}-tools = %{version}
 Requires:       core
 
 %description docs
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
-This package installs the GeoWave documentation into the GeoWave directory
+Installs the GeoWave documentation into the GeoWave directory
 
 %files docs
 %defattr(644, geowave, geowave, 755)
@@ -235,8 +233,7 @@ Requires:       %{versioned_app_name}-tools = %{version}
 Requires:       core
 
 %description -n %{versioned_app_name}-jetty
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
-This package installs the Accumulo components of GeoWave
+Installs the Jetty and GeoServer components of GeoWave
 
 %post -n %{versioned_app_name}-jetty
 /sbin/chkconfig --add geowave
@@ -250,6 +247,8 @@ exit 0
 %files -n %{versioned_app_name}-jetty
 %defattr(644, geowave, geowave, 755) 
 %{geowave_geoserver_home}
+
+%exclude %{geowave_geoserver_home}/webapps/geowave-dev-resources.war
 
 %attr(755, geowave, geowave) %{geowave_geoserver_home}/bin
 
@@ -271,8 +270,7 @@ Provides:       %{versioned_app_name}-tools = %{version}
 Requires:       core
 
 %description -n %{versioned_app_name}-tools
-GeoWave provides geospatial and temporal indexing on top of Accumulo.
-This package installs GeoWave tools utility
+Installs GeoWave tools utility
 
 %post -n %{versioned_app_name}-tools
 alternatives --install %{geowave_home} geowave-home %{geowave_install} %{installpriority}
@@ -295,13 +293,27 @@ fi
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+%package -n     %{versioned_app_name}-dev-resources
+Summary:        GeoWave Development Resources
+Group:          Applications/Internet
+Provides:       %{versioned_app_name}-dev-resources = %{version}
+Requires:       jetty
+
+%description -n %{versioned_app_name}-dev-resources
+GeoWave Development Resources
+
+%files -n %{versioned_app_name}-dev-resources
+%attr(644, geowave, geowave) %{geowave_geoserver_home}/webapps/geowave-dev-resources.war
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 %package        puppet
 Summary:        GeoWave Puppet Scripts
 Group:          Applications/Internet
 Requires:       puppet
 
 %description puppet
-This package installs the geowave Puppet module to /etc/puppet/modules
+Installs the geowave Puppet module to /etc/puppet/modules
 
 %files puppet
 %defattr(644, root, root, 755)
@@ -310,6 +322,8 @@ This package installs the geowave Puppet module to /etc/puppet/modules
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 %changelog
+* Wed Aug 5 2015 Andrew Spohn <andrew.e.spohn.ctr@nga.mil> - 0.8.9
+- Added packaging for geowve-dev-resources web application
 * Fri Jun 5 2015 Andrew Spohn <andrew.e.spohn.ctr@nga.mil> - 0.8.7-1
 - Add external config file
 * Fri May 22 2015 Andrew Spohn <andrew.e.spohn.ctr@nga.mil> - 0.8.7

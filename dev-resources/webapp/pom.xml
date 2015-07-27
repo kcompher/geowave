@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>geowave-dev-resources-parent</artifactId>
+        <groupId>mil.nga.giat</groupId>
+        <relativePath>../</relativePath>
+        <version>0.8.9-SNAPSHOT</version>
+    </parent>
+    <artifactId>geowave-dev-resources-webapp</artifactId>
+    <name>GeoWave Dev Resources WebApp</name>
+    <description>A web site containing dev resources</description>
+    <packaging>war</packaging>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>9.2.8.v20150217</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <profiles>
+        <profile>
+            <id>geowave-tools-singlejar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.6</version>
+                        <configuration>
+                            <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+                            <webResources>
+                                <resource>
+                                    <targetPath>content</targetPath>
+                                    <directory>../../deploy/target</directory>
+                                    <includes>
+                                        <include>**/geowave-tools.jar</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <targetPath>content</targetPath>
+                                    <directory>../../examples/target</directory>
+                                    <includes>
+                                        <include>**/geowave-example-${project.version}.jar</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

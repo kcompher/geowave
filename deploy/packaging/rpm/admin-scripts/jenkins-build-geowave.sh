@@ -24,6 +24,12 @@ mv $WORKSPACE/deploy/target/*-accumulo-singlejar.jar $WORKSPACE/deploy/target/ge
 mvn package -P geowave-tools-singlejar $BUILD_ARGS "$@"
 mv $WORKSPACE/deploy/target/*-tools.jar $WORKSPACE/deploy/target/geowave-tools.jar
 
+pushd $WORKSPACE/dev-resources/webapp
+mvn package -P geowave-tools-singlejar $BUILD_ARGS "$@"
+mv $WORKSPACE/dev-resources/webapp/target/geowave-dev-resources-webapp-*-tools.war $WORKSPACE/deploy/target/geowave-dev-resources.war
+popd
+
+mv $WORKSPACE/dev-resources/webapp/target/
 pushd $WORKSPACE/analytics/mapreduce
 mvn package -P analytics-singlejar $BUILD_ARGS "$@"
 mv $WORKSPACE/analytics/mapreduce/target/munged/geowave-analytic-mapreduce-*-analytics-singlejar.jar $WORKSPACE/deploy/target/geowave-analytic-mapreduce.jar

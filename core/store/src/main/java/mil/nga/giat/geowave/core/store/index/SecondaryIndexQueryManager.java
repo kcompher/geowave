@@ -55,7 +55,7 @@ public class SecondaryIndexQueryManager
 			}
 		}
 
-		return new CloseableIterator.Empty<Map<ByteArrayId,List<ByteArrayRange>>>();
+		return new CloseableIterator.Empty<Map<ByteArrayId, List<ByteArrayRange>>>();
 	}
 
 }

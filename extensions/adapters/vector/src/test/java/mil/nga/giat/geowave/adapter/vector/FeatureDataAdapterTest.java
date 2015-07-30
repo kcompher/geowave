@@ -122,9 +122,9 @@ public class FeatureDataAdapterTest
 				IndexType.SPATIAL_VECTOR.getDefaultIndexModel());
 
 		GeometryWrapper wrapper = null;
-		for (PersistentValue pv : persistenceEncoding.getCommonData().getValues()) {
-			if (pv.getValue() instanceof GeometryWrapper) {
-				wrapper = (GeometryWrapper) pv.getValue();
+		for (Object pv : persistenceEncoding.getCommonData().getValues()) {
+			if (((PersistentValue)pv).getValue() instanceof GeometryWrapper) {
+				wrapper = (GeometryWrapper) ((PersistentValue)pv).getValue();
 			}
 		}
 		assertNotNull(wrapper);

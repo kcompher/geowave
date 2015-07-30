@@ -12,5 +12,5 @@ import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
 public interface QueryFilter
 {
 	public boolean accept(
-			IndexedPersistenceEncoding persistenceEncoding );
+			IndexedPersistenceEncoding<?> persistenceEncoding );
 }

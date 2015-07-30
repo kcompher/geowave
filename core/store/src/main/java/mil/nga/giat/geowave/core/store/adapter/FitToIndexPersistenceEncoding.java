@@ -16,7 +16,7 @@ public class FitToIndexPersistenceEncoding extends
 	public FitToIndexPersistenceEncoding(
 			final ByteArrayId adapterId,
 			final ByteArrayId dataId,
-			final PersistentDataset<? extends CommonIndexValue> commonData,
+			final PersistentDataset<CommonIndexValue> commonData,
 			final PersistentDataset<Object> adapterExtendedData,
 			final ByteArrayId insertionId ) {
 		super(

@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
-
 import mil.nga.giat.geowave.core.geotime.GeometryUtils;
 import mil.nga.giat.geowave.core.geotime.store.dimension.GeometryWrapper;
 import mil.nga.giat.geowave.core.index.ByteArrayId;
@@ -21,6 +18,8 @@ import mil.nga.giat.geowave.core.store.dimension.NumericDimensionField;
 import mil.nga.giat.geowave.core.store.filter.BasicQueryFilter;
 import mil.nga.giat.geowave.core.store.filter.GenericTypeResolver;
 
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
@@ -118,7 +117,7 @@ public class SpatialQueryFilter extends
 
 	@Override
 	public boolean accept(
-			final IndexedPersistenceEncoding persistenceEncoding ) {
+			final IndexedPersistenceEncoding<?> persistenceEncoding ) {
 		if (preparedGeometryImage == null) {
 			return true;
 		}

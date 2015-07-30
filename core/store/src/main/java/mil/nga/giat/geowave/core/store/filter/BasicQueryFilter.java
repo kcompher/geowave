@@ -13,6 +13,7 @@ import mil.nga.giat.geowave.core.index.sfc.data.BinnedNumericDataset;
 import mil.nga.giat.geowave.core.index.sfc.data.MultiDimensionalNumericData;
 import mil.nga.giat.geowave.core.index.sfc.data.NumericData;
 import mil.nga.giat.geowave.core.index.sfc.data.NumericRange;
+import mil.nga.giat.geowave.core.store.data.CommonIndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.dimension.NumericDimensionField;
 
@@ -80,9 +81,10 @@ public class BasicQueryFilter implements
 
 	@Override
 	public boolean accept(
-			final IndexedPersistenceEncoding persistenceEncoding ) {
+			final IndexedPersistenceEncoding<?> persistenceEncoding ) {
+		if (!(persistenceEncoding instanceof CommonIndexedPersistenceEncoding)) return false;
 		final BinnedNumericDataset[] dataRanges = BinnedNumericDataset.applyBins(
-				persistenceEncoding.getNumericData(dimensionFields),
+				((CommonIndexedPersistenceEncoding) persistenceEncoding).getNumericData(dimensionFields),
 				dimensionFields);
 		// check that at least one data range overlaps at least one query range
 		for (final BinnedNumericDataset dataRange : dataRanges) {

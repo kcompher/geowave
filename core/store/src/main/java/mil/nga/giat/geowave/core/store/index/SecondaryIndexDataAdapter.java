@@ -11,7 +11,8 @@ import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
  *            The type for the data element that is being adapted
  * 
  */
-public interface SecondaryIndexDataAdapter<T> extends DataAdapter<T>
+public interface SecondaryIndexDataAdapter<T> extends
+		DataAdapter<T>
 {
 	public ByteArrayId[] getSupportedIndexIds();
 

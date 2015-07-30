@@ -1,7 +1,7 @@
 package mil.nga.giat.geowave.core.store.adapter;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
-import mil.nga.giat.geowave.core.store.data.PersistenceEncoding;
+import mil.nga.giat.geowave.core.store.data.CommonIndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.data.PersistentDataset;
 import mil.nga.giat.geowave.core.store.index.CommonIndexValue;
 
@@ -12,18 +12,20 @@ import mil.nga.giat.geowave.core.store.index.CommonIndexValue;
  * index and is used when writing an entry, prior to its existence in an index.
  */
 public class AdapterPersistenceEncoding extends
-		PersistenceEncoding
+		CommonIndexedPersistenceEncoding
 {
 	private final PersistentDataset<Object> adapterExtendedData;
 
 	public AdapterPersistenceEncoding(
 			final ByteArrayId adapterId,
 			final ByteArrayId dataId,
-			final PersistentDataset<? extends CommonIndexValue> commonData,
+			final PersistentDataset<CommonIndexValue> commonData,
 			final PersistentDataset<Object> adapterExtendedData ) {
 		super(
 				adapterId,
 				dataId,
+				null,
+				0,
 				commonData);
 		this.adapterExtendedData = adapterExtendedData;
 	}

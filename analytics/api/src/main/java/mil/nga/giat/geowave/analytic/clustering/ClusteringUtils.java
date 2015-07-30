@@ -22,6 +22,7 @@ import mil.nga.giat.geowave.core.index.ByteArrayRange;
 import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.index.CustomIdIndex;
+import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
 import mil.nga.giat.geowave.datastore.accumulo.BasicAccumuloOperations;
@@ -85,7 +86,7 @@ public class ClusteringUtils
 			}
 		}
 		else {
-			return indexStore.getIndex(dbId);
+			return (PrimaryIndex)indexStore.getIndex(dbId);
 		}
 
 	}
@@ -166,10 +167,10 @@ public class ClusteringUtils
 
 			final AccumuloIndexStore indexStore = new AccumuloIndexStore(
 					ops);
-			final mil.nga.giat.geowave.core.store.CloseableIterator<PrimaryIndex> it = indexStore.getIndices();
+			final mil.nga.giat.geowave.core.store.CloseableIterator<Index<?,?>> it = indexStore.getIndices();
 			final List<PrimaryIndex> indices = new LinkedList<PrimaryIndex>();
 			while (it.hasNext()) {
-				indices.add(it.next());
+				indices.add((PrimaryIndex) it.next());
 			}
 
 			final PrimaryIndex[] result = new PrimaryIndex[indices.size()];

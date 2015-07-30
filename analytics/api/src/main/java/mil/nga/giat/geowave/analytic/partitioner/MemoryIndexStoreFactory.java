@@ -2,9 +2,9 @@ package mil.nga.giat.geowave.analytic.partitioner;
 
 import mil.nga.giat.geowave.analytic.ConfigurationWrapper;
 import mil.nga.giat.geowave.analytic.db.IndexStoreFactory;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.MemoryIndexStore;
+import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 
 public class MemoryIndexStoreFactory implements
 		IndexStoreFactory
@@ -14,7 +14,7 @@ public class MemoryIndexStoreFactory implements
 			new PrimaryIndex[0]);
 
 	@Override
-	public PrimaryIndexStore getIndexStore(
+	public IndexStore getIndexStore(
 			ConfigurationWrapper context )
 			throws InstantiationException {
 		return IndexStoreInstance;

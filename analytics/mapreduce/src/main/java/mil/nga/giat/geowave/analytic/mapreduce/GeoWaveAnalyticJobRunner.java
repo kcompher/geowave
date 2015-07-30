@@ -21,6 +21,7 @@ import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.index.CustomIdIndex;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.JobContextAdapterStore;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.JobContextIndexStore;
@@ -209,7 +210,7 @@ public abstract class GeoWaveAnalyticJobRunner extends
 				runTimeProperties);
 	}
 
-	public PrimaryIndexStore getIndexStore(
+	public IndexStore getIndexStore(
 			final PropertyManagement runTimeProperties )
 			throws Exception {
 		return runTimeProperties.getClassInstance(
@@ -352,9 +353,9 @@ public abstract class GeoWaveAnalyticJobRunner extends
 				indexIdEnum,
 				defaultIdxName);
 
-		final PrimaryIndexStore indexStore = getIndexStore(runTimeProperties);
+		final IndexStore indexStore = getIndexStore(runTimeProperties);
 
-		PrimaryIndex index = indexStore.getIndex(new ByteArrayId(
+		PrimaryIndex index = (PrimaryIndex) indexStore.getIndex(new ByteArrayId(
 				indexId));
 		if (index == null) {
 			index = new CustomIdIndex(

@@ -1,7 +1,7 @@
 package mil.nga.giat.geowave.core.store.adapter;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
-import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
+import mil.nga.giat.geowave.core.store.data.CommonIndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.data.PersistentDataset;
 import mil.nga.giat.geowave.core.store.index.CommonIndexValue;
 
@@ -13,7 +13,7 @@ import mil.nga.giat.geowave.core.store.index.CommonIndexValue;
  * this entry in the index, and is used when reading data from the index.
  */
 public class IndexedAdapterPersistenceEncoding extends
-		IndexedPersistenceEncoding
+		CommonIndexedPersistenceEncoding
 {
 	private final PersistentDataset<Object> adapterExtendedData;
 
@@ -22,7 +22,7 @@ public class IndexedAdapterPersistenceEncoding extends
 			final ByteArrayId dataId,
 			final ByteArrayId indexId,
 			final int duplicateCount,
-			final PersistentDataset<? extends CommonIndexValue> commonData,
+			final PersistentDataset<CommonIndexValue> commonData,
 			final PersistentDataset<Object> adapterExtendedData ) {
 		super(
 				adapterId,

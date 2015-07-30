@@ -7,7 +7,7 @@ import java.util.Map;
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayUtils;
 import mil.nga.giat.geowave.core.index.PersistenceUtils;
-import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
+import mil.nga.giat.geowave.core.store.data.CommonIndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.data.PersistentDataset;
 import mil.nga.giat.geowave.core.store.data.PersistentValue;
 import mil.nga.giat.geowave.core.store.data.field.FieldReader;
@@ -67,7 +67,7 @@ public class QueryFilterIterator extends
 						fieldId,
 						fieldValue));
 			}
-			final IndexedPersistenceEncoding encoding = new IndexedPersistenceEncoding(
+			final CommonIndexedPersistenceEncoding encoding = new CommonIndexedPersistenceEncoding(
 					new ByteArrayId(
 							rowId.getAdapterId()),
 					new ByteArrayId(

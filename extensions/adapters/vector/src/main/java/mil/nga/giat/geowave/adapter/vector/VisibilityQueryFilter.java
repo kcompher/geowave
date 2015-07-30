@@ -24,14 +24,15 @@ public class VisibilityQueryFilter implements
 
 	@Override
 	public boolean accept(
-			IndexedPersistenceEncoding persistenceEncoding ) {
+			IndexedPersistenceEncoding<?> persistenceEncoding ) {
 
-		for (PersistentValue<? extends CommonIndexValue> value : persistenceEncoding.getCommonData().getValues()) {
+		for (Object value : persistenceEncoding.getCommonData().getValues()) {
+			PersistentValue<? extends CommonIndexValue> pValue = (PersistentValue<? extends CommonIndexValue>) value;
 			ColumnVisibility v = new ColumnVisibility(
-					value.getValue().getVisibility());
+					pValue.getValue().getVisibility());
 			if (matches(
 					v.getParseTree(),
-					value.getValue().getVisibility())) return true;
+					pValue.getValue().getVisibility())) return true;
 		}
 		return false;
 	}

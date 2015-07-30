@@ -150,7 +150,7 @@ public class CentroidManagerGeoWave<T> implements
 				basicAccumuloOperations);
 		indexStore = new AccumuloIndexStore(
 				basicAccumuloOperations);
-		index = indexStore.getIndex(new ByteArrayId(
+		index = (PrimaryIndex)indexStore.getIndex(new ByteArrayId(
 				StringUtils.stringToBinary(indexId)));
 		adapterStore = new AccumuloAdapterStore(
 				basicAccumuloOperations);
@@ -185,7 +185,7 @@ public class CentroidManagerGeoWave<T> implements
 				basicAccumuloOperations);
 		indexStore = new AccumuloIndexStore(
 				basicAccumuloOperations);
-		index = indexStore.getIndex(new ByteArrayId(
+		index = (PrimaryIndex)indexStore.getIndex(new ByteArrayId(
 				StringUtils.stringToBinary(indexId)));
 		adapterStore = new AccumuloAdapterStore(
 				basicAccumuloOperations);
@@ -280,7 +280,7 @@ public class CentroidManagerGeoWave<T> implements
 				basicAccumuloOperations);
 		indexStore = new AccumuloIndexStore(
 				basicAccumuloOperations);
-		index = indexStore.getIndex(new ByteArrayId(
+		index = (PrimaryIndex)indexStore.getIndex(new ByteArrayId(
 				StringUtils.stringToBinary(indexId)));
 		adapterStore = new AccumuloAdapterStore(
 				basicAccumuloOperations);
@@ -336,7 +336,7 @@ public class CentroidManagerGeoWave<T> implements
 				basicAccumuloOperations);
 		indexStore = new AccumuloIndexStore(
 				basicAccumuloOperations);
-		index = indexStore.getIndex(new ByteArrayId(
+		index = (PrimaryIndex)indexStore.getIndex(new ByteArrayId(
 				StringUtils.stringToBinary(indexId)));
 		adapterStore = new AccumuloAdapterStore(
 				basicAccumuloOperations);

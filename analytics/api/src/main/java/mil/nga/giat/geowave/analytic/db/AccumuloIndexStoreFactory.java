@@ -3,7 +3,7 @@ package mil.nga.giat.geowave.analytic.db;
 import mil.nga.giat.geowave.analytic.ConfigurationWrapper;
 import mil.nga.giat.geowave.analytic.param.CommonParameters;
 import mil.nga.giat.geowave.analytic.param.GlobalParameters;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
+import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.datastore.accumulo.BasicAccumuloOperations;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloIndexStore;
 
@@ -18,7 +18,7 @@ public class AccumuloIndexStoreFactory implements
 	final static Logger LOGGER = LoggerFactory.getLogger(AccumuloIndexStoreFactory.class);
 
 	@Override
-	public PrimaryIndexStore getIndexStore(
+	public IndexStore getIndexStore(
 			ConfigurationWrapper context )
 			throws InstantiationException {
 

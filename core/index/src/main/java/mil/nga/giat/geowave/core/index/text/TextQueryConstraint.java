@@ -31,8 +31,8 @@ public abstract class TextQueryConstraint implements
 			TextQueryConstraint
 	{
 
-		private final String start;
-		private final String end;
+		protected final String start;
+		protected final String end;
 
 		/*
 		 * Equals
@@ -120,7 +120,7 @@ public abstract class TextQueryConstraint implements
 			TextQueryConstraint
 	{
 
-		private final String expression;
+		protected final String expression;
 
 		/*
 		 * Equals
@@ -152,7 +152,7 @@ public abstract class TextQueryConstraint implements
 								minNGramSize,
 								maxSize));
 				final List<ByteArrayId> specificNGrams = TextIndexStrategy.grams(
-						expression,
+						expression.toLowerCase(),
 						minNGramSearchSize,
 						maxNGramSize);
 				final List<ByteArrayRange> ranges = new ArrayList<ByteArrayRange>();
@@ -169,7 +169,7 @@ public abstract class TextQueryConstraint implements
 				// starts with case
 				final String prefix = expression.substring(
 						0,
-						percentIndex);
+						percentIndex).toLowerCase();
 				final String startSearchString = (prefix.length() == (expression.length() - 1)) ? prefix : prefix + "\000";
 				final String endSearchString = (prefix.length() == (expression.length() - 1)) ? prefix : prefix + "\177";
 				return new TextRange(
@@ -180,7 +180,7 @@ public abstract class TextQueryConstraint implements
 			}
 			else {
 				return new TextRange(
-						expression).getRange(
+						expression.toLowerCase()).getRange(
 						minNGramSize,
 						maxNGramSize);
 			}

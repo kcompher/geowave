@@ -5,6 +5,7 @@ import java.util.Map;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
+import mil.nga.giat.geowave.core.store.CloseableIterator;
 import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 
@@ -23,6 +24,7 @@ public interface IndexDataStore
 	 */
 	public void store(
 			ByteArrayId indexID,
+			ByteArrayId dataId,
 			List<ByteArrayId> ranges,
 			ByteArrayId visibility,
 			ByteArrayId dataLocationID,
@@ -39,6 +41,7 @@ public interface IndexDataStore
 	 */
 	public void remove(
 			ByteArrayId indexID,
+			ByteArrayId dataId,
 			List<ByteArrayId> ranges,
 			ByteArrayId visibility,
 			ByteArrayId dataLocationID,
@@ -55,7 +58,7 @@ public interface IndexDataStore
 	 *            for additional filtering
 	 * @return Primary Index ID associated Range Values
 	 */
-	public Map<ByteArrayId, List<ByteArrayRange>> query(
+	public CloseableIterator<Map<ByteArrayId, List<ByteArrayRange>>> query(
 			ByteArrayId indexID,
 			List<ByteArrayRange> ranges,
 			List<QueryFilter> constraints,

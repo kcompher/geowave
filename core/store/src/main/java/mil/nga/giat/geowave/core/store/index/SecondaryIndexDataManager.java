@@ -67,6 +67,7 @@ public class SecondaryIndexDataManager<T> implements
 							entry));
 			secondaryIndexStore.store(
 					indexID,
+					adapter.getDataId(entry),
 					ranges,
 					visibility,
 					primaryIndexId,
@@ -112,6 +113,7 @@ public class SecondaryIndexDataManager<T> implements
 							entry));
 			secondaryIndexStore.remove(
 					indexID,
+					adapter.getDataId(entry),
 					ranges,
 					visibility,
 					primaryIndexId,

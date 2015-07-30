@@ -15,17 +15,13 @@ import mil.nga.giat.geowave.analytic.param.CommonParameters;
 import mil.nga.giat.geowave.analytic.param.FormatConfiguration;
 import mil.nga.giat.geowave.analytic.param.InputParameters;
 import mil.nga.giat.geowave.analytic.param.OutputParameters;
-import mil.nga.giat.geowave.analytic.param.OutputParameters.Output;
 import mil.nga.giat.geowave.analytic.param.ParameterEnum;
-import mil.nga.giat.geowave.core.geotime.DimensionalityType;
 import mil.nga.giat.geowave.core.geotime.IndexType;
-import mil.nga.giat.geowave.core.geotime.index.NumericIndexStrategyFactory.DataType;
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.store.adapter.AdapterStore;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 import mil.nga.giat.geowave.core.store.index.CustomIdIndex;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndexStore;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.JobContextAdapterStore;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.JobContextIndexStore;
 

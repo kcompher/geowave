@@ -1,14 +1,12 @@
 package mil.nga.giat.geowave.core.store.index;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
 import mil.nga.giat.geowave.core.store.CloseableIterator;
-import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
 import mil.nga.giat.geowave.core.store.query.Query;
 
 /**
@@ -40,7 +38,7 @@ public class SecondaryIndexQueryManager
 	 *         with that index
 	 * @throws IOException
 	 */
-	public Map<ByteArrayId, List<ByteArrayRange>> query(
+	public CloseableIterator<Map<ByteArrayId, List<ByteArrayRange>>> query(
 			final Query query,
 			final String... visibility )
 			throws IOException {
@@ -57,7 +55,7 @@ public class SecondaryIndexQueryManager
 			}
 		}
 
-		return Collections.emptyMap();
+		return new CloseableIterator.Empty<Map<ByteArrayId,List<ByteArrayRange>>>();
 	}
 
 }

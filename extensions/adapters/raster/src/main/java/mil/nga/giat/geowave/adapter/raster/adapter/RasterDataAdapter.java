@@ -514,6 +514,7 @@ public class RasterDataAdapter implements
 					new MosaicPerPyramidLevelBuilder(
 							bounds,
 							gridCoverage,
+							coverageName,
 							tileSize,
 							backgroundValuesPerBand,
 							RasterUtils.getFootprint(
@@ -532,18 +533,21 @@ public class RasterDataAdapter implements
 		private final GridCoverage originalData;
 		private final int tileSize;
 		private final double[] backgroundValuesPerBand;
+		private final String coverageName;
 		private final Geometry footprint;
 		private final Interpolation defaultInterpolation;
 
 		public MosaicPerPyramidLevelBuilder(
 				final MultiDimensionalNumericData originalBounds,
 				final GridCoverage originalData,
+				final String coverageName,
 				final int tileSize,
 				final double[] backgroundValuesPerBand,
 				final Geometry footprint,
 				final Interpolation defaultInterpolation ) {
 			this.originalBounds = originalBounds;
 			this.originalData = originalData;
+			this.coverageName = coverageName;
 			this.tileSize = tileSize;
 			this.backgroundValuesPerBand = backgroundValuesPerBand;
 			this.footprint = footprint;
@@ -683,12 +687,18 @@ public class RasterDataAdapter implements
 								tileInterpolation = Interpolation.getInstance(Interpolation.INTERP_NEAREST);
 							}
 						}
-						final GridCoverage resampledCoverage = (GridCoverage) getResampleOperations().resample(
+						// final GridCoverage resampledCoverage = (GridCoverage)
+						// getResampleOperations().resample(
+						// originalData,
+						// GeoWaveGTRasterFormat.DEFAULT_CRS,
+						// insertionIdGeometry,
+						// tileInterpolation,
+						// backgroundValuesPerBand);
+
+						final GridCoverage resampledCoverage = RasterUtils.resample(
+								coverageName,
 								originalData,
-								GeoWaveGTRasterFormat.DEFAULT_CRS,
-								insertionIdGeometry,
-								tileInterpolation,
-								backgroundValuesPerBand);
+								insertionIdGeometry);
 						// NOTE: for now this is commented out, but beware the
 						// resample operation under certain conditions,
 						// this requires more investigation rather than adding a

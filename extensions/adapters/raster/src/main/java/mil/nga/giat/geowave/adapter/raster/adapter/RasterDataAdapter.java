@@ -664,8 +664,10 @@ public class RasterDataAdapter implements
 									e);
 						}
 
-						Interpolation tileInterpolation = defaultInterpolation;
-						final int dataType = originalData.getRenderedImage().getSampleModel().getDataType();
+						// Interpolation tileInterpolation =
+						// defaultInterpolation;
+						// final int dataType =
+						// originalData.getRenderedImage().getSampleModel().getDataType();
 
 						// TODO a JAI bug "workaround" in GeoTools does not
 						// work, this is a workaround for the GeoTools bug
@@ -673,20 +675,25 @@ public class RasterDataAdapter implements
 						// line 666-698 of
 						// org.geotools.coverage.processing.operation.Resampler2D
 						// (gt-coverage-12.1)
-						if ((dataType == DataBuffer.TYPE_FLOAT) || (dataType == DataBuffer.TYPE_DOUBLE)) {
-							final Envelope tileEnvelope = insertionIdGeometry.getEnvelope();
-							final ReferencedEnvelope tileReferencedEnvelope = new ReferencedEnvelope(
-									new com.vividsolutions.jts.geom.Envelope(
-											tileEnvelope.getMinimum(0),
-											tileEnvelope.getMaximum(0),
-											tileEnvelope.getMinimum(1),
-											tileEnvelope.getMaximum(1)),
-									GeoWaveGTRasterFormat.DEFAULT_CRS);
-							final Geometry tileJTSGeometry = new GeometryFactory().toGeometry(tileReferencedEnvelope);
-							if (!footprint.contains(tileJTSGeometry)) {
-								tileInterpolation = Interpolation.getInstance(Interpolation.INTERP_NEAREST);
-							}
-						}
+						// if ((dataType == DataBuffer.TYPE_FLOAT) || (dataType
+						// == DataBuffer.TYPE_DOUBLE)) {
+						// final Envelope tileEnvelope =
+						// insertionIdGeometry.getEnvelope();
+						// final ReferencedEnvelope tileReferencedEnvelope = new
+						// ReferencedEnvelope(
+						// new com.vividsolutions.jts.geom.Envelope(
+						// tileEnvelope.getMinimum(0),
+						// tileEnvelope.getMaximum(0),
+						// tileEnvelope.getMinimum(1),
+						// tileEnvelope.getMaximum(1)),
+						// GeoWaveGTRasterFormat.DEFAULT_CRS);
+						// final Geometry tileJTSGeometry = new
+						// GeometryFactory().toGeometry(tileReferencedEnvelope);
+						// if (!footprint.contains(tileJTSGeometry)) {
+						// tileInterpolation =
+						// Interpolation.getInstance(Interpolation.INTERP_NEAREST);
+						// }
+						// }
 						// final GridCoverage resampledCoverage = (GridCoverage)
 						// getResampleOperations().resample(
 						// originalData,
@@ -888,7 +895,7 @@ public class RasterDataAdapter implements
 	/**
 	 * This method is responsible for creating a coverage from the supplied
 	 * {@link RenderedImage}.
-	 *
+	 * 
 	 * @param image
 	 * @return
 	 * @throws IOException

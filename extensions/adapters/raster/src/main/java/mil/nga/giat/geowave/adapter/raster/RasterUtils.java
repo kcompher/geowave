@@ -391,7 +391,7 @@ public class RasterUtils
 
 	/**
 	 * Creates a math transform using the information provided.
-	 *
+	 * 
 	 * @return The math transform.
 	 * @throws IllegalStateException
 	 *             if the grid range or the envelope were not set.
@@ -463,7 +463,7 @@ public class RasterUtils
 
 	/**
 	 * Returns the math transform as a two-dimensional affine transform.
-	 *
+	 * 
 	 * @return The math transform as a two-dimensional affine transform.
 	 * @throws IllegalStateException
 	 *             if the math transform is not of the appropriate type.
@@ -972,7 +972,7 @@ public class RasterUtils
 	 * dimensions for the data backing the given iterator. Particularly, it was
 	 * desirable to be able to provide the name per band which was not provided
 	 * in the original.
-	 *
+	 * 
 	 * @param name
 	 *            The name for each band of the data (e.g. "Elevation").
 	 * @param model
@@ -1020,11 +1020,11 @@ public class RasterUtils
 		}
 		/*
 		 * Arguments are know to be valids. We now need to compute two ranges:
-		 *
+		 * 
 		 * STEP 1: Range of target (sample) values. This is computed in the
 		 * following block. STEP 2: Range of source (geophysics) values. It will
 		 * be computed one block later.
-		 *
+		 * 
 		 * The target (sample) values will typically range from 0 to 255 or 0 to
 		 * 65535, but the general case is handled as well. If the source
 		 * (geophysics) raster uses floating point numbers, then a "nodata"

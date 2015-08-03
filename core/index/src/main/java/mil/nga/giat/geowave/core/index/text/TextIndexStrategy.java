@@ -68,7 +68,7 @@ public class TextIndexStrategy implements
 	public List<ByteArrayId> getInsertionIds(
 			final String indexedData ) {
 		return grams(
-				"\01" + indexedData + "\01",
+				START_END_MARKER + indexedData + START_END_MARKER,
 				start,
 				end);
 	}
@@ -78,7 +78,7 @@ public class TextIndexStrategy implements
 			final String indexedData,
 			final int maxEstimatedDuplicateIds ) {
 		return grams(
-				"\01" + indexedData + "\01",
+				START_END_MARKER + indexedData + START_END_MARKER,
 				start,
 				end);
 	}

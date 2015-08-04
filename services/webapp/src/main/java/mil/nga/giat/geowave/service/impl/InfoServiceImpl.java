@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
-import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
+import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.datastore.accumulo.util.AccumuloUtils;
 import mil.nga.giat.geowave.datastore.accumulo.util.ConnectorPool;
 import mil.nga.giat.geowave.service.InfoService;
@@ -110,11 +110,11 @@ public class InfoServiceImpl implements
 	public Response getIndices(
 			@PathParam("namespace")
 			final String namespace ) {
-		final List<PrimaryIndex> indices = AccumuloUtils.getIndices(
+		final List<Index<?, ?>> indices = AccumuloUtils.getIndices(
 				connector,
 				namespace);
 		final JSONArray indexNames = new JSONArray();
-		for (final PrimaryIndex index : indices) {
+		for (final Index<?, ?> index : indices) {
 			if ((index != null) && (index.getId() != null)) {
 				final JSONObject indexObj = new JSONObject();
 				indexObj.put(

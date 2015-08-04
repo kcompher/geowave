@@ -12,7 +12,7 @@ import mil.nga.giat.geowave.adapter.vector.FeatureDataAdapter;
 import mil.nga.giat.geowave.adapter.vector.VectorDataStore;
 import mil.nga.giat.geowave.core.geotime.GeometryUtils;
 import mil.nga.giat.geowave.core.geotime.IndexType;
-import mil.nga.giat.geowave.core.store.index.Index;
+import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.index.secondary.NumericSecondaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.index.secondary.TemporalSecondaryIndex;
 import mil.nga.giat.geowave.datastore.accumulo.index.secondary.TextSecondaryIndex;
@@ -89,7 +89,7 @@ public class SecondaryIndexingDriver extends
 		VectorDataStore dataStore = new VectorDataStore(
 				accumuloOperations);
 
-		final Index index = IndexType.SPATIAL_VECTOR.createDefaultIndex();
+		final PrimaryIndex index = IndexType.SPATIAL_VECTOR.createDefaultIndex();
 
 		List<SimpleFeature> features = new ArrayList<>();
 		for (int x = 0; x < NUM_FEATURES; x++) {

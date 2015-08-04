@@ -59,7 +59,8 @@ public class SecondaryIndexDataManager<T> implements
 						entryInfo,
 						fieldID));
 			}
-			final List<ByteArrayId> ranges = index.indexStrategy.getInsertionIds(infos);
+			final List<ByteArrayId> ranges = index.getIndexStrategy().getInsertionIds(
+					infos);
 			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(indexID);
 			final ByteArrayId visibility = new ByteArrayId(
 					visibilityHandler.getVisibility(
@@ -105,7 +106,8 @@ public class SecondaryIndexDataManager<T> implements
 						entryInfo,
 						fieldID));
 			}
-			final List<ByteArrayId> ranges = index.indexStrategy.getInsertionIds(infos);
+			final List<ByteArrayId> ranges = index.getIndexStrategy().getInsertionIds(
+					infos);
 			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(indexID);
 			final ByteArrayId visibility = new ByteArrayId(
 					visibilityHandler.getVisibility(

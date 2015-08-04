@@ -17,10 +17,8 @@ import com.google.common.base.Joiner;
 public class SecondaryIndex implements
 		Index<FilterableConstraints, List<FieldInfo<?>>>
 {
-	protected FieldIndexStrategy indexStrategy;
-	protected ByteArrayId[] fieldIDs;
-
-	protected SecondaryIndex() {}
+	private FieldIndexStrategy indexStrategy;
+	private ByteArrayId[] fieldIDs;
 
 	public SecondaryIndex(
 			final FieldIndexStrategy indexStrategy,
@@ -29,6 +27,7 @@ public class SecondaryIndex implements
 		this.fieldIDs = fieldIDs;
 	}
 
+	@Override
 	public FieldIndexStrategy getIndexStrategy() {
 		return indexStrategy;
 	}
@@ -37,6 +36,7 @@ public class SecondaryIndex implements
 		return fieldIDs;
 	}
 
+	@Override
 	public ByteArrayId getId() {
 		return new ByteArrayId(
 				StringUtils.stringToBinary(indexStrategy.getId() + "#" + Joiner.on(

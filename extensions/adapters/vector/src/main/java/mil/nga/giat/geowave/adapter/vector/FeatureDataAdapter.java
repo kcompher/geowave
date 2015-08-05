@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import mil.nga.giat.geowave.adapter.vector.plugin.GeoWaveGTDataStore;
 import mil.nga.giat.geowave.adapter.vector.plugin.visibility.AdaptorProxyFieldLevelVisibilityHandler;
@@ -33,6 +34,10 @@ import mil.nga.giat.geowave.core.store.data.field.FieldWriter;
 import mil.nga.giat.geowave.core.store.data.visibility.VisibilityManagement;
 import mil.nga.giat.geowave.core.store.index.CommonIndexModel;
 import mil.nga.giat.geowave.core.store.index.CommonIndexValue;
+import mil.nga.giat.geowave.core.store.index.SecondaryIndex;
+import mil.nga.giat.geowave.core.store.index.SecondaryIndexDataAdapter;
+import mil.nga.giat.geowave.core.store.index.numeric.NumericIndexStrategy;
+import mil.nga.giat.geowave.core.store.index.text.TextIndexStrategy;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.HadoopDataAdapter;
 import mil.nga.giat.geowave.datastore.accumulo.mapreduce.HadoopWritableSerializer;
 
@@ -94,7 +99,8 @@ import org.opengis.referencing.operation.MathTransform;
 public class FeatureDataAdapter extends
 		AbstractDataAdapter<SimpleFeature> implements
 		StatisticalDataAdapter<SimpleFeature>,
-		HadoopDataAdapter<SimpleFeature, FeatureWritable>
+		HadoopDataAdapter<SimpleFeature, FeatureWritable>,
+		SecondaryIndexDataAdapter<SimpleFeature>
 {
 	private final static Logger LOGGER = Logger.getLogger(FeatureDataAdapter.class);
 	// the original coordinate system will always be represented internally by
@@ -111,6 +117,7 @@ public class FeatureDataAdapter extends
 	private String visibilityAttributeName = "GEOWAVE_VISIBILITY";
 	private VisibilityManagement<SimpleFeature> fieldVisibilityManagement;
 	private TimeDescriptors timeDescriptors = null;
+	private List<SecondaryIndex> supportedSecondaryIndices = new ArrayList<>();
 
 	// should change this anytime the serialized image changes. Stay negative.
 	// so 0xa0, 0xa1, 0xa2 etc.
@@ -167,6 +174,7 @@ public class FeatureDataAdapter extends
 		setFeatureType(type);
 		this.fieldVisiblityHandler = fieldVisiblityHandler;
 		fieldVisibilityManagement = visibilityManagement;
+		initSecondaryIndices(type);
 	}
 
 	private void setFeatureType(
@@ -200,6 +208,49 @@ public class FeatureDataAdapter extends
 				persistedType,
 				reprojectedType,
 				transform);
+	}
+
+	private void initSecondaryIndices(
+			final SimpleFeatureType sft ) {
+
+		// FIXME right now this method simply iterates the attributes of a
+		// SimpleFeatureType to examine the user data of each attribute looking
+		// for a key "index" with a value of true. For any attribute marked
+		// index=true, it simply makes a decision (guess) on how to index the
+		// attribute based on the attribute type. This is a dirty first cut that
+		// does not support compound secondary indices. The logic of this method
+		// should be replaced with a more robust approach.
+
+		List<ByteArrayId> numericFields = new ArrayList<>();
+		List<ByteArrayId> textFields = new ArrayList<>();
+
+		for (AttributeDescriptor desc : sft.getAttributeDescriptors()) {
+			final Map<Object, Object> userData = desc.getUserData();
+			if (userData.containsKey("index") && userData.get(
+					"index").equals(
+					Boolean.TRUE)) {
+				final String attributeName = desc.getLocalName();
+				final Class<?> attributeType = desc.getType().getBinding();
+				final ByteArrayId fieldId = new ByteArrayId(
+						attributeName);
+				if (Number.class.isAssignableFrom(attributeType)) {
+					numericFields.add(fieldId);
+				}
+				else if (String.class.isAssignableFrom(attributeType)) {
+					textFields.add(fieldId);
+				}
+			}
+		}
+		if (numericFields.size() > 0) {
+			supportedSecondaryIndices.add(new SecondaryIndex(
+					new NumericIndexStrategy(),
+					numericFields.toArray(new ByteArrayId[numericFields.size()])));
+		}
+		if (textFields.size() > 0) {
+			supportedSecondaryIndices.add(new SecondaryIndex(
+					new TextIndexStrategy(),
+					textFields.toArray(new ByteArrayId[textFields.size()])));
+		}
 	}
 
 	private static List<NativeFieldHandler<SimpleFeature, Object>> typeToFieldHandlers(
@@ -278,7 +329,6 @@ public class FeatureDataAdapter extends
 		reprojectedType = builder.buildFeatureType();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public FieldReader<Object> getReader(
 			final ByteArrayId fieldId ) {
@@ -287,7 +337,6 @@ public class FeatureDataAdapter extends
 		return (FieldReader<Object>) FieldUtils.getDefaultReaderForClass(bindingClass);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public FieldWriter<SimpleFeature, Object> getWriter(
 			final ByteArrayId fieldId ) {
@@ -600,4 +649,10 @@ public class FeatureDataAdapter extends
 		}
 
 	}
+
+	@Override
+	public List<SecondaryIndex> getSupportedSecondaryIndices() {
+		return supportedSecondaryIndices;
+	}
+
 }

@@ -1,4 +1,4 @@
-package mil.nga.giat.geowave.core.index.text;
+package mil.nga.giat.geowave.core.store.index.numeric;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import mil.nga.giat.geowave.core.index.IndexStrategy;
 public class NumericIndexStrategy implements
 		IndexStrategy<NumericQueryConstraint, Number>
 {
+
+	public NumericIndexStrategy() {}
 
 	@Override
 	public byte[] toBinary() {

@@ -1,4 +1,4 @@
-package mil.nga.giat.geowave.core.index.text;
+package mil.nga.giat.geowave.core.store.index.text;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -8,8 +8,9 @@ import java.util.List;
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
 import mil.nga.giat.geowave.core.index.StringUtils;
-import mil.nga.giat.geowave.core.index.text.TextQueryConstraint.LikeConstraint;
-import mil.nga.giat.geowave.core.index.text.TextQueryConstraint.TextRange;
+import mil.nga.giat.geowave.core.store.index.text.TextIndexStrategy;
+import mil.nga.giat.geowave.core.store.index.text.TextQueryConstraint.LikeConstraint;
+import mil.nga.giat.geowave.core.store.index.text.TextQueryConstraint.TextRange;
 
 import org.junit.Test;
 

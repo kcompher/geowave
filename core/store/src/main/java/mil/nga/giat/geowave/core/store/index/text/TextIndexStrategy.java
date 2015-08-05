@@ -1,4 +1,4 @@
-package mil.nga.giat.geowave.core.index.text;
+package mil.nga.giat.geowave.core.store.index.text;
 
 import java.io.IOException;
 import java.io.StringReader;

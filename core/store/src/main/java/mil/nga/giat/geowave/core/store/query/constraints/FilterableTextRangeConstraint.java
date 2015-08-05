@@ -1,10 +1,10 @@
 package mil.nga.giat.geowave.core.store.query.constraints;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
-import mil.nga.giat.geowave.core.index.text.TextQueryConstraint;
 import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 import mil.nga.giat.geowave.core.store.index.FilterableConstraints;
+import mil.nga.giat.geowave.core.store.index.text.TextQueryConstraint;
 
 public class FilterableTextRangeConstraint extends
 		TextQueryConstraint.TextRange implements

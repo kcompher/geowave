@@ -1,4 +1,4 @@
-package mil.nga.giat.geowave.core.index.text;
+package mil.nga.giat.geowave.core.store.index.numeric;
 
 import mil.nga.giat.geowave.core.index.QueryConstraints;
 

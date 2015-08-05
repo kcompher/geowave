@@ -1,5 +1,7 @@
 package mil.nga.giat.geowave.core.store.index;
 
+import java.util.List;
+
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.store.EntryVisibilityHandler;
 import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
@@ -14,10 +16,7 @@ import mil.nga.giat.geowave.core.store.adapter.DataAdapter;
 public interface SecondaryIndexDataAdapter<T> extends
 		DataAdapter<T>
 {
-	public ByteArrayId[] getSupportedIndexIds();
-
-	public SecondaryIndex createIndex(
-			ByteArrayId indexId );
+	public List<SecondaryIndex> getSupportedSecondaryIndices();
 
 	public EntryVisibilityHandler<T> getVisibilityHandler(
 			ByteArrayId indexId );

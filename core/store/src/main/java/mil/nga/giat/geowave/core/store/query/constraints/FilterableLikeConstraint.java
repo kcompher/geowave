@@ -4,10 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
-import mil.nga.giat.geowave.core.index.text.TextQueryConstraint;
 import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 import mil.nga.giat.geowave.core.store.index.FilterableConstraints;
+import mil.nga.giat.geowave.core.store.index.text.TextQueryConstraint;
 
 public class FilterableLikeConstraint extends
 		TextQueryConstraint.LikeConstraint implements
@@ -16,6 +16,7 @@ public class FilterableLikeConstraint extends
 
 	private final ByteArrayId fieldId;
 	private final Pattern regex;
+
 	public FilterableLikeConstraint(
 			final ByteArrayId fieldId,
 			final String expression,
@@ -23,7 +24,11 @@ public class FilterableLikeConstraint extends
 		super(
 				expression);
 		this.fieldId = fieldId;
-		regex = Pattern.compile(expression.replace("%", ".*"), caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
+		regex = Pattern.compile(
+				expression.replace(
+						"%",
+						".*"),
+				caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
 	}
 
 	@Override
@@ -33,10 +38,12 @@ public class FilterableLikeConstraint extends
 			@Override
 			public boolean accept(
 					IndexedPersistenceEncoding<?> persistenceEncoding ) {
-				String value = persistenceEncoding.getCommonData().getValue(fieldId).toString();
-				final Matcher matcher =  regex.matcher(value);
+				String value = persistenceEncoding.getCommonData().getValue(
+						fieldId).toString();
+				final Matcher matcher = regex.matcher(value);
 				return matcher.matches();
-			}};
+			}
+		};
 	}
 
 }

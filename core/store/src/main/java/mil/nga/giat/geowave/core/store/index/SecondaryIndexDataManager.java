@@ -1,9 +1,7 @@
 package mil.nga.giat.geowave.core.store.index;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.store.DataStoreEntryInfo;
@@ -28,7 +26,6 @@ public class SecondaryIndexDataManager<T> implements
 	private final SecondaryIndexDataAdapter<T> adapter;
 	final IndexDataStore secondaryIndexStore;
 	final ByteArrayId primaryIndexId;
-	private final Map<ByteArrayId, SecondaryIndex> indexMap = new HashMap<ByteArrayId, SecondaryIndex>();
 
 	public SecondaryIndexDataManager(
 			final IndexDataStore secondaryIndexStore,
@@ -45,14 +42,7 @@ public class SecondaryIndexDataManager<T> implements
 			final DataStoreEntryInfo entryInfo,
 			final T entry ) {
 
-		for (ByteArrayId indexID : adapter.getSupportedIndexIds()) {
-			SecondaryIndex index = indexMap.get(indexID);
-			if (index == null) {
-				index = adapter.createIndex(indexID);
-				indexMap.put(
-						indexID,
-						index);
-			}
+		for (SecondaryIndex index : adapter.getSupportedSecondaryIndices()) {
 			final List<FieldInfo<?>> infos = new LinkedList<FieldInfo<?>>();
 			for (ByteArrayId fieldID : index.getFieldIDs()) {
 				infos.add(getFieldInfo(
@@ -61,13 +51,13 @@ public class SecondaryIndexDataManager<T> implements
 			}
 			final List<ByteArrayId> ranges = index.getIndexStrategy().getInsertionIds(
 					infos);
-			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(indexID);
+			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(index.getId());
 			final ByteArrayId visibility = new ByteArrayId(
 					visibilityHandler.getVisibility(
 							entryInfo,
 							entry));
 			secondaryIndexStore.store(
-					indexID,
+					index.getId(),
 					adapter.getDataId(entry),
 					ranges,
 					visibility,
@@ -92,14 +82,7 @@ public class SecondaryIndexDataManager<T> implements
 	public void entryDeleted(
 			final DataStoreEntryInfo entryInfo,
 			final T entry ) {
-		for (ByteArrayId indexID : adapter.getSupportedIndexIds()) {
-			SecondaryIndex index = indexMap.get(indexID);
-			if (index == null) {
-				index = adapter.createIndex(indexID);
-				indexMap.put(
-						indexID,
-						index);
-			}
+		for (SecondaryIndex index : adapter.getSupportedSecondaryIndices()) {
 			final List<FieldInfo<?>> infos = new LinkedList<FieldInfo<?>>();
 			for (ByteArrayId fieldID : index.getFieldIDs()) {
 				infos.add(getFieldInfo(
@@ -108,13 +91,13 @@ public class SecondaryIndexDataManager<T> implements
 			}
 			final List<ByteArrayId> ranges = index.getIndexStrategy().getInsertionIds(
 					infos);
-			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(indexID);
+			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(index.getId());
 			final ByteArrayId visibility = new ByteArrayId(
 					visibilityHandler.getVisibility(
 							entryInfo,
 							entry));
 			secondaryIndexStore.remove(
-					indexID,
+					index.getId(),
 					adapter.getDataId(entry),
 					ranges,
 					visibility,

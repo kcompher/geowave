@@ -1,4 +1,4 @@
-package mil.nga.giat.geowave.core.index.text;
+package mil.nga.giat.geowave.core.store.index.text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,6 +87,7 @@ public abstract class TextQueryConstraint implements
 			return TextIndexStrategy.toIndexByte(result);
 		}
 
+		@Override
 		public List<ByteArrayRange> getRange(
 				int minNGramSize,
 				int maxNGramSize ) {
@@ -130,6 +131,7 @@ public abstract class TextQueryConstraint implements
 			this.expression = expression;
 		}
 
+		@Override
 		public List<ByteArrayRange> getRange(
 				int minNGramSize,
 				int maxNGramSize ) {

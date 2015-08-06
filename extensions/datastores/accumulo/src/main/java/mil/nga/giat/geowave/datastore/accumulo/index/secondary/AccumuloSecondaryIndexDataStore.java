@@ -1,5 +1,6 @@
 package mil.nga.giat.geowave.datastore.accumulo.index.secondary;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,33 +16,49 @@ import mil.nga.giat.geowave.datastore.accumulo.Writer;
 import org.apache.accumulo.core.client.TableNotFoundException;
 import org.apache.accumulo.core.data.Mutation;
 import org.apache.accumulo.core.security.ColumnVisibility;
+import org.apache.log4j.Logger;
 
-public abstract class AbstractIndexDataStore implements
+public class AccumuloSecondaryIndexDataStore implements
 		IndexDataStore
 {
 	private static final String TABLE_PREFIX = "GEOWAVE_2ND_IDX_";
-	private final Writer writer;
+	private final AccumuloOperations accumuloOperations;
+	private Map<String, Writer> writerCache = new HashMap<>();
+	private final static Logger LOGGER = Logger.getLogger(AccumuloSecondaryIndexDataStore.class);
 
-	public AbstractIndexDataStore(
+	public AccumuloSecondaryIndexDataStore(
 			final AccumuloOperations accumuloOperations )
 			throws InstantiationException {
 		super();
-		try {
-			writer = accumuloOperations.createWriter(
-					TABLE_PREFIX + getTableSuffix(),
-					true,
-					false);
-		}
-		catch (final TableNotFoundException e) {
-			throw new InstantiationException(
-					"Could not construct writer for secondary index: " + e.getMessage());
-		}
+		this.accumuloOperations = accumuloOperations;
 	}
 
-	public abstract String getTableSuffix();
+	private Writer getWriter(
+			final String secondaryIndexName ) {
+		if (writerCache.containsKey(secondaryIndexName)) {
+			return writerCache.get(secondaryIndexName);
+		}
+		Writer writer = null;
+		try {
+			writer = accumuloOperations.createWriter(
+					TABLE_PREFIX + secondaryIndexName,
+					true,
+					false);
+			writerCache.put(
+					secondaryIndexName,
+					writer);
+		}
+		catch (TableNotFoundException e) {
+			LOGGER.error(
+					"Error creating writer",
+					e);
+		}
+		return writer;
+	}
 
 	@Override
 	public void store(
+			final String secondaryIndexName,
 			final ByteArrayId indexID,
 			final ByteArrayId dataId, // FIXME what is the purpose of dataId ???
 			final List<ByteArrayId> ranges,
@@ -49,26 +66,29 @@ public abstract class AbstractIndexDataStore implements
 			final ByteArrayId dataLocationID,
 			final List<ByteArrayId> dataRowIds,
 			final List<FieldInfo<?>> attributeInfos ) {
-		final ColumnVisibility columnVisibility = new ColumnVisibility(
-				visibility.getBytes());
-		for (final ByteArrayId range : ranges) {
-			final Mutation m = new Mutation(
-					range.getBytes());
-			for (final ByteArrayId dataRowId : dataRowIds) {
-				m.put(
-						indexID.getBytes(),
-						dataLocationID.getBytes(),
-						columnVisibility,
-						dataRowId.getBytes());
+		Writer writer = getWriter(secondaryIndexName);
+		if (writer != null) {
+			final ColumnVisibility columnVisibility = new ColumnVisibility(
+					visibility.getBytes());
+			for (final ByteArrayId range : ranges) {
+				final Mutation m = new Mutation(
+						range.getBytes());
+				for (final ByteArrayId dataRowId : dataRowIds) {
+					m.put(
+							indexID.getBytes(),
+							dataLocationID.getBytes(),
+							columnVisibility,
+							dataRowId.getBytes());
+				}
+				for (final FieldInfo<?> fieldInfo : attributeInfos) {
+					m.put(
+							indexID.getBytes(),
+							fieldInfo.getDataValue().getId().getBytes(),
+							columnVisibility,
+							fieldInfo.getWrittenValue());
+				}
+				writer.write(m);
 			}
-			for (final FieldInfo<?> fieldInfo : attributeInfos) {
-				m.put(
-						indexID.getBytes(),
-						fieldInfo.getDataValue().getId().getBytes(),
-						columnVisibility,
-						fieldInfo.getWrittenValue());
-			}
-			writer.write(m);
 		}
 	}
 

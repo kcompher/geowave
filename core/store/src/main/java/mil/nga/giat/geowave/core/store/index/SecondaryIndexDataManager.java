@@ -57,6 +57,7 @@ public class SecondaryIndexDataManager<T> implements
 							entryInfo,
 							entry));
 			secondaryIndexStore.store(
+					index.getIndexStrategy().getId(),
 					index.getId(),
 					adapter.getDataId(entry),
 					ranges,

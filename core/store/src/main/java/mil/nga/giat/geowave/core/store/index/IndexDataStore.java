@@ -16,13 +16,17 @@ public interface IndexDataStore
 {
 	/**
 	 * 
+	 * @param secondaryIndexName
 	 * @param indexID
+	 * @param dataId
 	 * @param ranges
 	 * @param visibility
 	 * @param dataLocationID
 	 * @param dataRowIds
+	 * @param attributeInfos
 	 */
 	public void store(
+			String secondaryIndexName,
 			ByteArrayId indexID,
 			ByteArrayId dataId,
 			List<ByteArrayId> ranges,

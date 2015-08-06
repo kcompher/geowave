@@ -9,8 +9,8 @@ import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
  * Interface which defines an index strategy.
  * 
  */
-public interface FieldIndexStrategy extends
-		IndexStrategy<FilterableConstraints, List<FieldInfo<?>>>
+public interface FieldIndexStrategy<ConstraintType extends FilterableConstraints, T> extends
+		IndexStrategy<ConstraintType, List<FieldInfo<T>>>
 {
 
 }

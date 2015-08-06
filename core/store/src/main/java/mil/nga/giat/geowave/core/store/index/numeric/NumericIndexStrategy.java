@@ -4,10 +4,11 @@ import java.util.List;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
-import mil.nga.giat.geowave.core.index.IndexStrategy;
+import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
+import mil.nga.giat.geowave.core.store.index.FieldIndexStrategy;
 
 public class NumericIndexStrategy implements
-		IndexStrategy<NumericQueryConstraint, Number>
+		FieldIndexStrategy<NumericQueryConstraint, Number>
 {
 
 	public NumericIndexStrategy() {}
@@ -41,29 +42,29 @@ public class NumericIndexStrategy implements
 	}
 
 	@Override
-	public List<ByteArrayId> getInsertionIds(
-			Number indexedData ) {
+	public String getId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<ByteArrayId> getInsertionIds(
-			Number indexedData,
+			List<FieldInfo<Number>> indexedData ) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ByteArrayId> getInsertionIds(
+			List<FieldInfo<Number>> indexedData,
 			int maxEstimatedDuplicateIds ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Number getRangeForId(
+	public List<FieldInfo<Number>> getRangeForId(
 			ByteArrayId insertionId ) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getId() {
 		// TODO Auto-generated method stub
 		return null;
 	}

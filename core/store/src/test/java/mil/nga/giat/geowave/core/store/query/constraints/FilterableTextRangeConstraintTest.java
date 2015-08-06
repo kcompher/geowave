@@ -7,6 +7,7 @@ import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
 import mil.nga.giat.geowave.core.store.data.PersistentDataset;
 import mil.nga.giat.geowave.core.store.data.PersistentValue;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
+import mil.nga.giat.geowave.core.store.index.text.FilterableTextRangeConstraint;
 
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class FilterableTextRangeConstraintTest
 				fieldID,
 				"RedDog",
 				false);
-		 filter = constraint.getFilter();
+		filter = constraint.getFilter();
 		assertFalse(filter.accept(create("fReddog")));
 		assertTrue(filter.accept(create("RedDog")));
 		assertTrue(filter.accept(create("reddog")));

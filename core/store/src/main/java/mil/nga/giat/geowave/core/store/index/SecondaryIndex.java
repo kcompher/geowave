@@ -17,16 +17,20 @@ import com.google.common.base.Joiner;
 public class SecondaryIndex implements
 		Index<FilterableConstraints, List<FieldInfo<?>>>
 {
-	private FieldIndexStrategy indexStrategy;
+	private FieldIndexStrategy<?, ?> indexStrategy;
 	private ByteArrayId[] fieldIDs;
 
 	public SecondaryIndex(
-			final FieldIndexStrategy indexStrategy,
+			final FieldIndexStrategy<?, ?> indexStrategy,
 			final ByteArrayId[] fieldIDs ) {
 		this.indexStrategy = indexStrategy;
 		this.fieldIDs = fieldIDs;
 	}
 
+	@SuppressWarnings({
+		"unchecked",
+		"rawtypes"
+	})
 	@Override
 	public FieldIndexStrategy getIndexStrategy() {
 		return indexStrategy;

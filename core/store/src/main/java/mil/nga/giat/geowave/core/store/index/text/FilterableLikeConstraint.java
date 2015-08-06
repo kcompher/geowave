@@ -1,0 +1,112 @@
+package mil.nga.giat.geowave.core.store.index.text;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import mil.nga.giat.geowave.core.index.ByteArrayId;
+import mil.nga.giat.geowave.core.index.ByteArrayRange;
+import mil.nga.giat.geowave.core.store.data.IndexedPersistenceEncoding;
+import mil.nga.giat.geowave.core.store.filter.QueryFilter;
+
+public class FilterableLikeConstraint extends
+		TextQueryConstraint
+{
+
+	private final String expression;
+	private final ByteArrayId fieldId;
+	private final Pattern regex;
+
+	/*
+	 * Equals
+	 */
+	public FilterableLikeConstraint(
+			final ByteArrayId fieldId,
+			final String expression,
+			final boolean caseSensitive ) {
+		this.expression = expression;
+		this.fieldId = fieldId;
+		regex = Pattern.compile(
+				expression.replace(
+						"%",
+						".*"),
+				caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
+	}
+
+	@Override
+	public List<ByteArrayRange> getRange(
+			int minNGramSize,
+			int maxNGramSize ) {
+		int percentIndex = expression.indexOf('%');
+		if (percentIndex == 0) {
+			// ends with case
+			int count = 0;
+			int maxSize = 0;
+			for (int i = 0; i < expression.length(); i++) {
+				if (expression.charAt(i) == '%') count = 0;
+				count++;
+				maxSize = Math.max(
+						maxSize,
+						count);
+			}
+			// find the largest possible ngrams
+			final int minNGramSearchSize = Math.min(
+					maxNGramSize,
+					Math.max(
+							minNGramSize,
+							maxSize));
+			final List<ByteArrayId> specificNGrams = TextIndexStrategy.grams(
+					expression.toLowerCase(),
+					minNGramSearchSize,
+					maxNGramSize);
+			final List<ByteArrayRange> ranges = new ArrayList<ByteArrayRange>();
+			for (ByteArrayId id : specificNGrams) {
+				ranges.add(new ByteArrayRange(
+						id,
+						id));
+				break; // actually only need to pick one...but the best one
+						// based on stats
+			}
+			return ranges;
+		}
+		else if (percentIndex > 0) {
+			// starts with case
+			final String prefix = expression.substring(
+					0,
+					percentIndex).toLowerCase();
+			final String startSearchString = (prefix.length() == (expression.length() - 1)) ? prefix : prefix + "\000";
+			final String endSearchString = (prefix.length() == (expression.length() - 1)) ? prefix : prefix + "\177";
+			return new FilterableTextRangeConstraint(
+					fieldId,
+					startSearchString,
+					endSearchString,
+					false).getRange(
+					minNGramSize,
+					maxNGramSize);
+		}
+		else {
+			return new FilterableTextRangeConstraint(
+					fieldId,
+					expression.toLowerCase(),
+					false).getRange(
+					minNGramSize,
+					maxNGramSize);
+		}
+	}
+
+	@Override
+	public QueryFilter getFilter() {
+		return new QueryFilter() {
+
+			@Override
+			public boolean accept(
+					IndexedPersistenceEncoding<?> persistenceEncoding ) {
+				String value = persistenceEncoding.getCommonData().getValue(
+						fieldId).toString();
+				final Matcher matcher = regex.matcher(value);
+				return matcher.matches();
+			}
+		};
+	}
+}

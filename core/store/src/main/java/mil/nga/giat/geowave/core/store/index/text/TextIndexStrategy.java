@@ -8,14 +8,15 @@ import java.util.List;
 
 import mil.nga.giat.geowave.core.index.ByteArrayId;
 import mil.nga.giat.geowave.core.index.ByteArrayRange;
-import mil.nga.giat.geowave.core.index.IndexStrategy;
 import mil.nga.giat.geowave.core.index.StringUtils;
+import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
+import mil.nga.giat.geowave.core.store.index.FieldIndexStrategy;
 
 import org.apache.lucene.analysis.ngram.NGramTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 public class TextIndexStrategy implements
-		IndexStrategy<TextQueryConstraint, String>
+		FieldIndexStrategy<TextQueryConstraint, String>
 {
 
 	protected static final String START_END_MARKER = "\01";
@@ -66,28 +67,30 @@ public class TextIndexStrategy implements
 
 	@Override
 	public List<ByteArrayId> getInsertionIds(
-			final String indexedData ) {
-		return grams(
-				START_END_MARKER + indexedData + START_END_MARKER,
-				start,
-				end);
+			List<FieldInfo<String>> indexedData ) {
+		List<ByteArrayId> insertionIds = new ArrayList<>();
+		for (FieldInfo<String> fieldInfo : indexedData) {
+			insertionIds.addAll(grams(
+					START_END_MARKER + fieldInfo.getDataValue().getValue() + START_END_MARKER,
+					start,
+					end));
+		}
+		return insertionIds;
 	}
 
 	@Override
 	public List<ByteArrayId> getInsertionIds(
-			final String indexedData,
-			final int maxEstimatedDuplicateIds ) {
-		return grams(
-				START_END_MARKER + indexedData + START_END_MARKER,
-				start,
-				end);
+			List<FieldInfo<String>> indexedData,
+			int maxEstimatedDuplicateIds ) {
+		// TODO handle maxEstimatedDuplicateIds
+		return getInsertionIds(indexedData);
 	}
 
 	@Override
-	public String getRangeForId(
-			final ByteArrayId insertionId ) {
-		// is this needed?
-		return insertionId.getString();
+	public List<FieldInfo<String>> getRangeForId(
+			ByteArrayId insertionId ) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

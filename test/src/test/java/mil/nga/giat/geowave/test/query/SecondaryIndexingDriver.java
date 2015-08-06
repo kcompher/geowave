@@ -13,9 +13,6 @@ import mil.nga.giat.geowave.adapter.vector.VectorDataStore;
 import mil.nga.giat.geowave.core.geotime.GeometryUtils;
 import mil.nga.giat.geowave.core.geotime.IndexType;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
-import mil.nga.giat.geowave.datastore.accumulo.index.secondary.NumericSecondaryIndex;
-import mil.nga.giat.geowave.datastore.accumulo.index.secondary.TemporalSecondaryIndex;
-import mil.nga.giat.geowave.datastore.accumulo.index.secondary.TextSecondaryIndex;
 import mil.nga.giat.geowave.test.GeoWaveTestEnvironment;
 
 import org.apache.accumulo.core.client.AccumuloException;
@@ -39,9 +36,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * This class is currently a dirty test harness used to sanity check changes as
  * I go. It will likely be rewritten/replaced by a much more sophisticated
  * integration test for secondary indexing once the capability matures
- * 
- * @author yeagerdc
- * 
+ *
  */
 public class SecondaryIndexingDriver extends
 		GeoWaveTestEnvironment
@@ -65,17 +60,17 @@ public class SecondaryIndexingDriver extends
 				"cannedData",
 				"location:Geometry,persons:Double,record_date:Date,income_category:String,affiliation:String");
 
-		// mark numeric attribute for secondary indexing
-		schema.getDescriptor(
-				"persons").getUserData().put(
-				"index",
-				Boolean.TRUE);
+		// TODO mark numeric attribute for secondary indexing
+		// schema.getDescriptor(
+		// "persons").getUserData().put(
+		// "index",
+		// Boolean.TRUE);
 
-		// mark temporal attribute for secondary indexing
-		schema.getDescriptor(
-				"record_date").getUserData().put(
-				"index",
-				Boolean.TRUE);
+		// TODO mark temporal attribute for secondary indexing
+		// schema.getDescriptor(
+		// "record_date").getUserData().put(
+		// "index",
+		// Boolean.TRUE);
 
 		// mark text attribute for secondary indexing
 		schema.getDescriptor(
@@ -83,15 +78,15 @@ public class SecondaryIndexingDriver extends
 				"index",
 				Boolean.TRUE);
 
-		FeatureDataAdapter dataAdapter = new FeatureDataAdapter(
+		final FeatureDataAdapter dataAdapter = new FeatureDataAdapter(
 				schema);
 
-		VectorDataStore dataStore = new VectorDataStore(
+		final VectorDataStore dataStore = new VectorDataStore(
 				accumuloOperations);
 
 		final PrimaryIndex index = IndexType.SPATIAL_VECTOR.createDefaultIndex();
 
-		List<SimpleFeature> features = new ArrayList<>();
+		final List<SimpleFeature> features = new ArrayList<>();
 		for (int x = 0; x < NUM_FEATURES; x++) {
 			features.add(buildSimpleFeature());
 		}
@@ -103,18 +98,7 @@ public class SecondaryIndexingDriver extends
 
 		System.out.println("Feature(s) ingested");
 
-		// final CloseableIterator<?> results = dataStore.query(new
-		// SpatialQuery(
-		// GeometryUtils.GEOMETRY_FACTORY.createPoint(new Coordinate(
-		// -102,
-		// 41))));
-		//
-		// while (results.hasNext()) {
-		// SimpleFeature sf = (SimpleFeature) results.next();
-		// System.out.println("Result: " + sf.getID());
-		// }
-		//
-		// results.close();
+		// TODO query
 
 	}
 
@@ -123,27 +107,23 @@ public class SecondaryIndexingDriver extends
 			throws AccumuloException,
 			AccumuloSecurityException,
 			TableNotFoundException {
-
-		int numNumericEntries = countNumberOfEntriesInIndexTable(NumericSecondaryIndex.TABLE_NAME);
-		Assert.assertTrue(numNumericEntries == NUM_FEATURES);
-
-		int numTemporalEntries = countNumberOfEntriesInIndexTable(TemporalSecondaryIndex.TABLE_NAME);
-		Assert.assertTrue(numTemporalEntries == NUM_FEATURES);
-
-		int numTrigrams = 9; // text "a few words" produces 9 unique tri-grams:
-		// {'a f', ' fe', 'few', 'ew ', 'w w', ' wo',
-		// 'wor', 'ord', 'rds'}
-		int numTextEntries = countNumberOfEntriesInIndexTable(TextSecondaryIndex.TABLE_NAME);
+		// text "a few words" produces 33 unique n-grams of length 2-4
+		// 12 bi-grams, 11 tri-grams, 10 quadrigrams
+		final int numTrigrams = 33;
+		final int indexEntriesPerKey = 2;
+		final int numTextEntries = countNumberOfEntriesInIndexTable("GEOWAVE_2ND_IDX_NGRAM_2_4");
 		// all features have the same affiliation text
-		Assert.assertTrue(numTextEntries == (NUM_FEATURES * numTrigrams));
+		Assert.assertTrue(numTextEntries == (NUM_FEATURES * numTrigrams * indexEntriesPerKey));
+		// TODO verify numeric, temporal, etc.
 	}
 
 	private int countNumberOfEntriesInIndexTable(
 			final String tableName )
 			throws TableNotFoundException {
-		Scanner scanner = accumuloOperations.createScanner(tableName);
+		final Scanner scanner = accumuloOperations.createScanner(tableName);
 		int numEntries = 0;
-		for (Entry<Key, Value> kv : scanner) {
+		for (@SuppressWarnings("unused")
+		final Entry<Key, Value> kv : scanner) {
 			numEntries++;
 		}
 		scanner.close();
@@ -155,11 +135,13 @@ public class SecondaryIndexingDriver extends
 		final SimpleFeatureBuilder builder = new SimpleFeatureBuilder(
 				schema);
 
-		int randomLng = random.nextInt(361) - 180; // generate random # between
-													// -180, 180 inclusive
-		int randomLat = random.nextInt(181) - 90; // generate random # between
-													// -90, 90 inclusive
-		int randomPersons = random.nextInt(2000000);
+		final int randomLng = random.nextInt(361) - 180; // generate random #
+															// between
+		// -180, 180 inclusive
+		final int randomLat = random.nextInt(181) - 90; // generate random #
+														// between
+		// -90, 90 inclusive
+		final int randomPersons = random.nextInt(2000000);
 
 		builder.set(
 				"location",

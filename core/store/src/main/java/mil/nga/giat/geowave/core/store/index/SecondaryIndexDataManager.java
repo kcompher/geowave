@@ -49,19 +49,21 @@ public class SecondaryIndexDataManager<T> implements
 						entryInfo,
 						fieldID));
 			}
+			@SuppressWarnings("unchecked")
 			final List<ByteArrayId> ranges = index.getIndexStrategy().getInsertionIds(
 					infos);
-			final EntryVisibilityHandler<T> visibilityHandler = adapter.getVisibilityHandler(index.getId());
-			final ByteArrayId visibility = new ByteArrayId(
-					visibilityHandler.getVisibility(
-							entryInfo,
-							entry));
+			// TODO handle visibility
+			// final EntryVisibilityHandler<T> visibilityHandler =
+			// adapter.getVisibilityHandler(index.getId());
+			// final ByteArrayId visibility = new
+			// ByteArrayId(visibilityHandler.getVisibility(entryInfo, entry));
 			secondaryIndexStore.store(
 					index.getIndexStrategy().getId(),
 					index.getId(),
 					adapter.getDataId(entry),
 					ranges,
-					visibility,
+					// visibility,
+					null,
 					primaryIndexId,
 					entryInfo.getRowIds(),
 					infos);

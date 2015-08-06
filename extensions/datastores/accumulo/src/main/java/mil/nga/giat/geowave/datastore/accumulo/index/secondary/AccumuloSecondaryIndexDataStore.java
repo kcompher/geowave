@@ -15,20 +15,19 @@ import mil.nga.giat.geowave.datastore.accumulo.Writer;
 
 import org.apache.accumulo.core.client.TableNotFoundException;
 import org.apache.accumulo.core.data.Mutation;
-import org.apache.accumulo.core.security.ColumnVisibility;
 import org.apache.log4j.Logger;
 
 public class AccumuloSecondaryIndexDataStore implements
-		IndexDataStore
+		IndexDataStore,
+		AutoCloseable
 {
+	private final static Logger LOGGER = Logger.getLogger(AccumuloSecondaryIndexDataStore.class);
 	private static final String TABLE_PREFIX = "GEOWAVE_2ND_IDX_";
 	private final AccumuloOperations accumuloOperations;
-	private Map<String, Writer> writerCache = new HashMap<>();
-	private final static Logger LOGGER = Logger.getLogger(AccumuloSecondaryIndexDataStore.class);
+	private final Map<String, Writer> writerCache = new HashMap<>();
 
 	public AccumuloSecondaryIndexDataStore(
-			final AccumuloOperations accumuloOperations )
-			throws InstantiationException {
+			final AccumuloOperations accumuloOperations ) {
 		super();
 		this.accumuloOperations = accumuloOperations;
 	}
@@ -48,7 +47,7 @@ public class AccumuloSecondaryIndexDataStore implements
 					secondaryIndexName,
 					writer);
 		}
-		catch (TableNotFoundException e) {
+		catch (final TableNotFoundException e) {
 			LOGGER.error(
 					"Error creating writer",
 					e);
@@ -66,10 +65,11 @@ public class AccumuloSecondaryIndexDataStore implements
 			final ByteArrayId dataLocationID,
 			final List<ByteArrayId> dataRowIds,
 			final List<FieldInfo<?>> attributeInfos ) {
-		Writer writer = getWriter(secondaryIndexName);
+		final Writer writer = getWriter(secondaryIndexName);
 		if (writer != null) {
-			final ColumnVisibility columnVisibility = new ColumnVisibility(
-					visibility.getBytes());
+			// TODO visibility
+			// final ColumnVisibility columnVisibility = new
+			// ColumnVisibility(visibility.getBytes());
 			for (final ByteArrayId range : ranges) {
 				final Mutation m = new Mutation(
 						range.getBytes());
@@ -77,14 +77,14 @@ public class AccumuloSecondaryIndexDataStore implements
 					m.put(
 							indexID.getBytes(),
 							dataLocationID.getBytes(),
-							columnVisibility,
+							// columnVisibility,
 							dataRowId.getBytes());
 				}
 				for (final FieldInfo<?> fieldInfo : attributeInfos) {
 					m.put(
 							indexID.getBytes(),
 							fieldInfo.getDataValue().getId().getBytes(),
-							columnVisibility,
+							// columnVisibility,
 							fieldInfo.getWrittenValue());
 				}
 				writer.write(m);
@@ -114,4 +114,11 @@ public class AccumuloSecondaryIndexDataStore implements
 		return null;
 	}
 
+	@Override
+	public void close()
+			throws Exception {
+		for (final Writer writer : writerCache.values()) {
+			writer.close();
+		}
+	}
 }

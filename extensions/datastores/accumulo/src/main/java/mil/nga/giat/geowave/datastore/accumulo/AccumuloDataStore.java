@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +36,11 @@ import mil.nga.giat.geowave.core.store.filter.MultiIndexDedupeFilter;
 import mil.nga.giat.geowave.core.store.index.Index;
 import mil.nga.giat.geowave.core.store.index.IndexStore;
 import mil.nga.giat.geowave.core.store.index.PrimaryIndex;
+import mil.nga.giat.geowave.core.store.index.SecondaryIndexDataAdapter;
+import mil.nga.giat.geowave.core.store.index.SecondaryIndexDataManager;
 import mil.nga.giat.geowave.core.store.query.Query;
 import mil.nga.giat.geowave.core.store.query.QueryOptions;
+import mil.nga.giat.geowave.datastore.accumulo.index.secondary.AccumuloSecondaryIndexDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloAdapterStore;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloDataStatisticsStore;
 import mil.nga.giat.geowave.datastore.accumulo.metadata.AccumuloIndexStore;
@@ -161,19 +163,6 @@ public class AccumuloDataStore implements
 				this);
 	}
 
-	/**
-	 * Provides a hook for other data stores to register additional callbacks
-	 * into the ingest process
-	 * 
-	 * @param callbacks
-	 * @return a reference to all writers opened by callbacks, so they can be
-	 *         properly closed
-	 */
-	protected <T> List<Writer> addAdditionalCallbacks(
-			final List<IngestCallback<T>> callbacks ) {
-		return Collections.emptyList();
-	}
-
 	@Override
 	public <T> List<ByteArrayId> ingest(
 			final WritableDataAdapter<T> writableAdapter,
@@ -217,6 +206,7 @@ public class AccumuloDataStore implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> List<ByteArrayId> ingestInternal(
 			final WritableDataAdapter<T> writableAdapter,
 			final PrimaryIndex index,
@@ -299,7 +289,21 @@ public class AccumuloDataStore implements
 
 			final List<IngestCallback<T>> callbacks = new ArrayList<IngestCallback<T>>();
 			callbacks.add(statisticsTool);
-			writers.addAll(addAdditionalCallbacks(callbacks));
+			if (writableAdapter instanceof SecondaryIndexDataAdapter<?>) {
+				try (AccumuloSecondaryIndexDataStore secondary = new AccumuloSecondaryIndexDataStore(
+						accumuloOperations)) {
+					callbacks.add(new SecondaryIndexDataManager<T>(
+							secondary,
+							(SecondaryIndexDataAdapter<T>) writableAdapter,
+							index.getId()));
+				}
+				catch (Exception e) {
+					LOGGER.error(
+							"Error closing writers",
+							e);
+				}
+			}
+
 			final IngestCallback<T> finalIngestCallback = new IngestCallbackList<T>(
 					callbacks);
 
@@ -402,7 +406,7 @@ public class AccumuloDataStore implements
 								@Override
 								public Iterator<T> convert(
 										final T entry ) {
-									return ((IndexDependentDataAdapter) dataWriter).convertToIndex(
+									return ((IndexDependentDataAdapter<T>) dataWriter).convertToIndex(
 											index,
 											entry);
 								}
@@ -421,6 +425,7 @@ public class AccumuloDataStore implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private <T> void ingestInternal(
 			final WritableDataAdapter<T> dataWriter,
 			final PrimaryIndex index,
@@ -474,7 +479,7 @@ public class AccumuloDataStore implements
 					accumuloOperations.attachIterators(
 							indexName,
 							accumuloOptions.isCreateTable(),
-							((AttachedIteratorDataAdapter) dataWriter).getAttachedIteratorConfig(index));
+							((AttachedIteratorDataAdapter<?>) dataWriter).getAttachedIteratorConfig(index));
 				}
 			}
 			final List<IngestCallback<T>> callbacks = new ArrayList<IngestCallback<T>>();
@@ -495,7 +500,20 @@ public class AccumuloDataStore implements
 			if (ingestCallback != null) {
 				callbacks.add(ingestCallback);
 			}
-			writers.addAll(addAdditionalCallbacks(callbacks));
+			if (dataWriter instanceof SecondaryIndexDataAdapter<?>) {
+				try (AccumuloSecondaryIndexDataStore secondary = new AccumuloSecondaryIndexDataStore(
+						accumuloOperations)) {
+					callbacks.add(new SecondaryIndexDataManager<T>(
+							secondary,
+							(SecondaryIndexDataAdapter<T>) dataWriter,
+							index.getId()));
+				}
+				catch (Exception e) {
+					LOGGER.error(
+							"Error closing writers",
+							e);
+				}
+			}
 			final IngestCallback<T> finalIngestCallback;
 			if (callbacks.size() > 1) {
 				finalIngestCallback = new IngestCallbackList<T>(

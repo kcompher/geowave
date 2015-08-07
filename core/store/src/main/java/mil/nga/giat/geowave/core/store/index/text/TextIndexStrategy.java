@@ -28,8 +28,8 @@ public class TextIndexStrategy implements
 	public TextIndexStrategy() {}
 
 	public TextIndexStrategy(
-			int start,
-			int end ) {
+			final int start,
+			final int end ) {
 		super();
 		this.start = start;
 		this.end = end;
@@ -67,9 +67,9 @@ public class TextIndexStrategy implements
 
 	@Override
 	public List<ByteArrayId> getInsertionIds(
-			List<FieldInfo<String>> indexedData ) {
-		List<ByteArrayId> insertionIds = new ArrayList<>();
-		for (FieldInfo<String> fieldInfo : indexedData) {
+			final List<FieldInfo<String>> indexedData ) {
+		final List<ByteArrayId> insertionIds = new ArrayList<>();
+		for (final FieldInfo<String> fieldInfo : indexedData) {
 			insertionIds.addAll(grams(
 					START_END_MARKER + fieldInfo.getDataValue().getValue() + START_END_MARKER,
 					start,
@@ -80,15 +80,15 @@ public class TextIndexStrategy implements
 
 	@Override
 	public List<ByteArrayId> getInsertionIds(
-			List<FieldInfo<String>> indexedData,
-			int maxEstimatedDuplicateIds ) {
+			final List<FieldInfo<String>> indexedData,
+			final int maxEstimatedDuplicateIds ) {
 		// TODO handle maxEstimatedDuplicateIds
 		return getInsertionIds(indexedData);
 	}
 
 	@Override
 	public List<FieldInfo<String>> getRangeForId(
-			ByteArrayId insertionId ) {
+			final ByteArrayId insertionId ) {
 		// TODO Auto-generated method stub
 		return null;
 	}

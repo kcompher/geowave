@@ -45,7 +45,7 @@ public class SecondaryIndex implements
 		return new ByteArrayId(
 				StringUtils.stringToBinary(indexStrategy.getId() + "#" + Joiner.on(
 						"#").join(
-						this.fieldIDs)));
+						fieldIDs)));
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class SecondaryIndex implements
 			return false;
 		}
 		final SecondaryIndex other = (SecondaryIndex) obj;
-		return this.getId().equals(
+		return getId().equals(
 				other.getId());
 	}
 

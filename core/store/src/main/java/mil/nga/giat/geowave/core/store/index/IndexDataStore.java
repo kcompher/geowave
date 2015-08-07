@@ -15,7 +15,7 @@ import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 public interface IndexDataStore
 {
 	/**
-	 * 
+	 *
 	 * @param secondaryIndexName
 	 * @param indexID
 	 * @param dataId
@@ -36,7 +36,7 @@ public interface IndexDataStore
 			List<FieldInfo<?>> attributeInfos );
 
 	/**
-	 * 
+	 *
 	 * @param indexID
 	 * @param ranges
 	 * @param visibility
@@ -53,7 +53,7 @@ public interface IndexDataStore
 			List<FieldInfo<?>> attributeInfos );
 
 	/**
-	 * 
+	 *
 	 * @param indexID
 	 *            secondary index ID
 	 * @param ranges

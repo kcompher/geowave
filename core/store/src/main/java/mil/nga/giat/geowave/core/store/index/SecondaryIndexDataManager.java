@@ -13,8 +13,8 @@ import mil.nga.giat.geowave.core.store.ScanCallback;
 
 /**
  * One manager associated with each primary index.
- * 
- * 
+ *
+ *
  * @param <T>
  *            The type of entity being indexed
  */
@@ -42,9 +42,9 @@ public class SecondaryIndexDataManager<T> implements
 			final DataStoreEntryInfo entryInfo,
 			final T entry ) {
 
-		for (SecondaryIndex index : adapter.getSupportedSecondaryIndices()) {
+		for (final SecondaryIndex index : adapter.getSupportedSecondaryIndices()) {
 			final List<FieldInfo<?>> infos = new LinkedList<FieldInfo<?>>();
-			for (ByteArrayId fieldID : index.getFieldIDs()) {
+			for (final ByteArrayId fieldID : index.getFieldIDs()) {
 				infos.add(getFieldInfo(
 						entryInfo,
 						fieldID));
@@ -74,9 +74,11 @@ public class SecondaryIndexDataManager<T> implements
 	private FieldInfo<?> getFieldInfo(
 			final DataStoreEntryInfo entryInfo,
 			final ByteArrayId fieldID ) {
-		for (FieldInfo<?> info : entryInfo.getFieldInfo()) {
+		for (final FieldInfo<?> info : entryInfo.getFieldInfo()) {
 			if (info.getDataValue().getId().equals(
-					fieldID)) return info;
+					fieldID)) {
+				return info;
+			}
 		}
 		return null;
 	}
@@ -85,9 +87,9 @@ public class SecondaryIndexDataManager<T> implements
 	public void entryDeleted(
 			final DataStoreEntryInfo entryInfo,
 			final T entry ) {
-		for (SecondaryIndex index : adapter.getSupportedSecondaryIndices()) {
+		for (final SecondaryIndex index : adapter.getSupportedSecondaryIndices()) {
 			final List<FieldInfo<?>> infos = new LinkedList<FieldInfo<?>>();
-			for (ByteArrayId fieldID : index.getFieldIDs()) {
+			for (final ByteArrayId fieldID : index.getFieldIDs()) {
 				infos.add(getFieldInfo(
 						entryInfo,
 						fieldID));
@@ -112,8 +114,8 @@ public class SecondaryIndexDataManager<T> implements
 
 	@Override
 	public void entryScanned(
-			DataStoreEntryInfo entryInfo,
-			T entry ) {
+			final DataStoreEntryInfo entryInfo,
+			final T entry ) {
 		// to do
 
 	}

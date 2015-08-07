@@ -25,7 +25,7 @@ public class FilterableTextRangeConstraint extends
 			final ByteArrayId fieldId,
 			final String matchstring,
 			final boolean caseSensitive ) {
-		this.start = this.end = caseSensitive ? matchstring : matchstring.toLowerCase();
+		start = end = caseSensitive ? matchstring : matchstring.toLowerCase();
 		this.fieldId = fieldId;
 		this.caseSensitive = caseSensitive;
 	}
@@ -43,8 +43,8 @@ public class FilterableTextRangeConstraint extends
 	}
 
 	private int subStringSize(
-			int minNGramSize,
-			int maxNGramSize ) {
+			final int minNGramSize,
+			final int maxNGramSize ) {
 		return Math.min(
 				maxNGramSize,
 				Math.min(
@@ -53,9 +53,9 @@ public class FilterableTextRangeConstraint extends
 	}
 
 	private byte[] compose(
-			String expression,
-			int pad,
-			byte padCharacter ) {
+			final String expression,
+			final int pad,
+			final byte padCharacter ) {
 		byte[] expressionBytes;
 		expressionBytes = StringUtils.stringToBinary(expression);
 		final byte[] result = new byte[expressionBytes.length + TextIndexStrategy.START_END_MARKER_BYTE.length + (pad < 0 ? 0 : pad)];
@@ -81,8 +81,8 @@ public class FilterableTextRangeConstraint extends
 
 	@Override
 	public List<ByteArrayRange> getRange(
-			int minNGramSize,
-			int maxNGramSize ) {
+			final int minNGramSize,
+			final int maxNGramSize ) {
 		// subtract one to account for the extra character
 		final int subStringSize = subStringSize(
 				minNGramSize - 1,
@@ -114,13 +114,13 @@ public class FilterableTextRangeConstraint extends
 
 			@Override
 			public boolean accept(
-					IndexedPersistenceEncoding<?> persistenceEncoding ) {
+					final IndexedPersistenceEncoding<?> persistenceEncoding ) {
 				String value = persistenceEncoding.getCommonData().getValue(
 						fieldId).toString();
 				value = caseSensitive ? value : value.toLowerCase();
-				int toStart = value.compareTo(start);
-				int toEnd = value.compareTo(end);
-				return (toStart >= 0 && toEnd <= 0);
+				final int toStart = value.compareTo(start);
+				final int toEnd = value.compareTo(end);
+				return ((toStart >= 0) && (toEnd <= 0));
 			}
 		};
 	}

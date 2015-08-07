@@ -17,7 +17,7 @@ public class FilterableTextRangeConstraintTest
 			"field");
 
 	private IndexedPersistenceEncoding<String> create(
-			String value ) {
+			final String value ) {
 		return new IndexedPersistenceEncoding<String>(
 				fieldID,
 				fieldID,

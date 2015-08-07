@@ -16,21 +16,21 @@ import org.junit.Test;
 
 public class TextIndexStrategyTest
 {
-	private ByteArrayId fieldId = new ByteArrayId(
+	private final ByteArrayId fieldId = new ByteArrayId(
 			"filler");
 
 	@Test
 	public void testInsertions() {
-		TextIndexStrategy strategy = new TextIndexStrategy();
-		FieldInfo<String> fieldInfo = new FieldInfo<>(
+		final TextIndexStrategy strategy = new TextIndexStrategy();
+		final FieldInfo<String> fieldInfo = new FieldInfo<>(
 				new PersistentValue<String>(
 						null,
 						"inability to deal with or understand something complicated or unaccountable"),
 				null,
 				null);
-		List<FieldInfo<String>> fieldInfoList = new ArrayList<>();
+		final List<FieldInfo<String>> fieldInfoList = new ArrayList<>();
 		fieldInfoList.add(fieldInfo);
-		List<ByteArrayId> ids = strategy.getInsertionIds(fieldInfoList);
+		final List<ByteArrayId> ids = strategy.getInsertionIds(fieldInfoList);
 		assertTrue(ids.contains(new ByteArrayId(
 				"\01i")));
 		assertTrue(ids.contains(new ByteArrayId(
@@ -44,7 +44,7 @@ public class TextIndexStrategyTest
 
 	@Test
 	public void testQueryTextRange() {
-		TextIndexStrategy strategy = new TextIndexStrategy(
+		final TextIndexStrategy strategy = new TextIndexStrategy(
 				3,
 				4);
 		List<ByteArrayRange> ranges = strategy.getQueryRanges(new FilterableTextRangeConstraint(
@@ -90,7 +90,7 @@ public class TextIndexStrategyTest
 
 	@Test
 	public void testQueryTestLike() {
-		TextIndexStrategy strategy = new TextIndexStrategy(
+		final TextIndexStrategy strategy = new TextIndexStrategy(
 				3,
 				4);
 		List<ByteArrayRange> ranges = strategy.getQueryRanges(new FilterableLikeConstraint(

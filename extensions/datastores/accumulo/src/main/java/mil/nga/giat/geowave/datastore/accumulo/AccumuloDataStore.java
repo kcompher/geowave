@@ -290,7 +290,7 @@ public class AccumuloDataStore implements
 			final List<IngestCallback<T>> callbacks = new ArrayList<IngestCallback<T>>();
 			callbacks.add(statisticsTool);
 			if (writableAdapter instanceof SecondaryIndexDataAdapter<?>) {
-				AccumuloSecondaryIndexDataStore secondaryIndexStore = new AccumuloSecondaryIndexDataStore(
+				final AccumuloSecondaryIndexDataStore secondaryIndexStore = new AccumuloSecondaryIndexDataStore(
 						accumuloOperations);
 				writers.add(secondaryIndexStore);
 				callbacks.add(new SecondaryIndexDataManager<T>(
@@ -306,7 +306,7 @@ public class AccumuloDataStore implements
 					entryInfo,
 					entry);
 
-			for (Closable w : writers) {
+			for (final Closable w : writers) {
 				w.close();
 			}
 
@@ -325,7 +325,7 @@ public class AccumuloDataStore implements
 			try {
 				statisticsTool.close();
 			}
-			catch (Exception e) {
+			catch (final Exception e) {
 				LOGGER.error("Unable to close statistics tool");
 			}
 		}
@@ -496,7 +496,7 @@ public class AccumuloDataStore implements
 				callbacks.add(ingestCallback);
 			}
 			if (dataWriter instanceof SecondaryIndexDataAdapter<?>) {
-				AccumuloSecondaryIndexDataStore secondaryIndexStore = new AccumuloSecondaryIndexDataStore(
+				final AccumuloSecondaryIndexDataStore secondaryIndexStore = new AccumuloSecondaryIndexDataStore(
 						accumuloOperations);
 				writers.add(secondaryIndexStore);
 				callbacks.add(new SecondaryIndexDataManager<T>(
@@ -550,7 +550,7 @@ public class AccumuloDataStore implements
 				}
 			});
 
-			for (Closable w : writers) {
+			for (final Closable w : writers) {
 				w.close();
 			}
 
@@ -717,7 +717,7 @@ public class AccumuloDataStore implements
 			// issue; going to call .flush() internally even if success = false;
 			statsCompositionTool.close();
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			LOGGER.error(
 					"Error closing statsCompositionTool",
 					ex);
@@ -1146,7 +1146,7 @@ public class AccumuloDataStore implements
 
 	@Override
 	public <T> CloseableIterator<T> query(
-			PrimaryIndex index,
+			final PrimaryIndex index,
 			final Query query,
 			final QueryOptions queryOptions ) {
 		return query(
@@ -1302,12 +1302,14 @@ public class AccumuloDataStore implements
 	}
 
 	private <T> void synchronizeStatsWithStore(
-			StatsCompositionTool<T> compositionTool,
-			boolean commitStats ) {
-		if (commitStats)
+			final StatsCompositionTool<T> compositionTool,
+			final boolean commitStats ) {
+		if (commitStats) {
 			compositionTool.flush();
-		else
+		}
+		else {
 			compositionTool.reset();
+		}
 	}
 
 	private boolean deleteAll(
@@ -1342,7 +1344,7 @@ public class AccumuloDataStore implements
 
 	/**
 	 * Delete rows associated with a single entry
-	 * 
+	 *
 	 * @param tableName
 	 * @param rows
 	 * @param deleteRowObserver

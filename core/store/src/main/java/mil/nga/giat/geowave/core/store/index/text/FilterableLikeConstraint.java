@@ -36,15 +36,17 @@ public class FilterableLikeConstraint extends
 
 	@Override
 	public List<ByteArrayRange> getRange(
-			int minNGramSize,
-			int maxNGramSize ) {
-		int percentIndex = expression.indexOf('%');
+			final int minNGramSize,
+			final int maxNGramSize ) {
+		final int percentIndex = expression.indexOf('%');
 		if (percentIndex == 0) {
 			// ends with case
 			int count = 0;
 			int maxSize = 0;
 			for (int i = 0; i < expression.length(); i++) {
-				if (expression.charAt(i) == '%') count = 0;
+				if (expression.charAt(i) == '%') {
+					count = 0;
+				}
 				count++;
 				maxSize = Math.max(
 						maxSize,
@@ -61,7 +63,7 @@ public class FilterableLikeConstraint extends
 					minNGramSearchSize,
 					maxNGramSize);
 			final List<ByteArrayRange> ranges = new ArrayList<ByteArrayRange>();
-			for (ByteArrayId id : specificNGrams) {
+			for (final ByteArrayId id : specificNGrams) {
 				ranges.add(new ByteArrayRange(
 						id,
 						id));
@@ -101,8 +103,8 @@ public class FilterableLikeConstraint extends
 
 			@Override
 			public boolean accept(
-					IndexedPersistenceEncoding<?> persistenceEncoding ) {
-				String value = persistenceEncoding.getCommonData().getValue(
+					final IndexedPersistenceEncoding<?> persistenceEncoding ) {
+				final String value = persistenceEncoding.getCommonData().getValue(
 						fieldId).toString();
 				final Matcher matcher = regex.matcher(value);
 				return matcher.matches();

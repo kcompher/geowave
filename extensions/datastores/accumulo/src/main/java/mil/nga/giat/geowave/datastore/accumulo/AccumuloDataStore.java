@@ -215,7 +215,7 @@ public class AccumuloDataStore implements
 		store(writableAdapter);
 		store(index);
 
-		final List<Writer> writers = new ArrayList<>();
+		final List<Closable> writers = new ArrayList<>();
 		Writer writer = null;
 		StatsCompositionTool<T> statisticsTool = null;
 		try {
@@ -290,18 +290,13 @@ public class AccumuloDataStore implements
 			final List<IngestCallback<T>> callbacks = new ArrayList<IngestCallback<T>>();
 			callbacks.add(statisticsTool);
 			if (writableAdapter instanceof SecondaryIndexDataAdapter<?>) {
-				try (AccumuloSecondaryIndexDataStore secondary = new AccumuloSecondaryIndexDataStore(
-						accumuloOperations)) {
-					callbacks.add(new SecondaryIndexDataManager<T>(
-							secondary,
-							(SecondaryIndexDataAdapter<T>) writableAdapter,
-							index.getId()));
-				}
-				catch (Exception e) {
-					LOGGER.error(
-							"Error closing writers",
-							e);
-				}
+				AccumuloSecondaryIndexDataStore secondaryIndexStore = new AccumuloSecondaryIndexDataStore(
+						accumuloOperations);
+				writers.add(secondaryIndexStore);
+				callbacks.add(new SecondaryIndexDataManager<T>(
+						secondaryIndexStore,
+						(SecondaryIndexDataAdapter<T>) writableAdapter,
+						index.getId()));
 			}
 
 			final IngestCallback<T> finalIngestCallback = new IngestCallbackList<T>(
@@ -311,7 +306,7 @@ public class AccumuloDataStore implements
 					entryInfo,
 					entry);
 
-			for (Writer w : writers) {
+			for (Closable w : writers) {
 				w.close();
 			}
 
@@ -436,7 +431,7 @@ public class AccumuloDataStore implements
 			store(dataWriter);
 			store(index);
 
-			final List<Writer> writers = new ArrayList<>();
+			final List<Closable> writers = new ArrayList<>();
 			final String tableName = StringUtils.stringFromBinary(index.getId().getBytes());
 			final String altIdxTableName = tableName + AccumuloUtils.ALT_INDEX_TABLE;
 			final byte[] adapterId = dataWriter.getAdapterId().getBytes();
@@ -501,18 +496,13 @@ public class AccumuloDataStore implements
 				callbacks.add(ingestCallback);
 			}
 			if (dataWriter instanceof SecondaryIndexDataAdapter<?>) {
-				try (AccumuloSecondaryIndexDataStore secondary = new AccumuloSecondaryIndexDataStore(
-						accumuloOperations)) {
-					callbacks.add(new SecondaryIndexDataManager<T>(
-							secondary,
-							(SecondaryIndexDataAdapter<T>) dataWriter,
-							index.getId()));
-				}
-				catch (Exception e) {
-					LOGGER.error(
-							"Error closing writers",
-							e);
-				}
+				AccumuloSecondaryIndexDataStore secondaryIndexStore = new AccumuloSecondaryIndexDataStore(
+						accumuloOperations);
+				writers.add(secondaryIndexStore);
+				callbacks.add(new SecondaryIndexDataManager<T>(
+						secondaryIndexStore,
+						(SecondaryIndexDataAdapter<T>) dataWriter,
+						index.getId()));
 			}
 			final IngestCallback<T> finalIngestCallback;
 			if (callbacks.size() > 1) {
@@ -560,7 +550,7 @@ public class AccumuloDataStore implements
 				}
 			});
 
-			for (Writer w : writers) {
+			for (Closable w : writers) {
 				w.close();
 			}
 

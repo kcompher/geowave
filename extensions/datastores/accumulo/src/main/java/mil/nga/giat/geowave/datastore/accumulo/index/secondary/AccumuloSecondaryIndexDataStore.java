@@ -11,6 +11,7 @@ import mil.nga.giat.geowave.core.store.DataStoreEntryInfo.FieldInfo;
 import mil.nga.giat.geowave.core.store.filter.QueryFilter;
 import mil.nga.giat.geowave.core.store.index.IndexDataStore;
 import mil.nga.giat.geowave.datastore.accumulo.AccumuloOperations;
+import mil.nga.giat.geowave.datastore.accumulo.Closable;
 import mil.nga.giat.geowave.datastore.accumulo.Writer;
 
 import org.apache.accumulo.core.client.TableNotFoundException;
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
 
 public class AccumuloSecondaryIndexDataStore implements
 		IndexDataStore,
-		AutoCloseable
+		Closable
 {
 	private final static Logger LOGGER = Logger.getLogger(AccumuloSecondaryIndexDataStore.class);
 	private static final String TABLE_PREFIX = "GEOWAVE_2ND_IDX_";
@@ -115,8 +116,7 @@ public class AccumuloSecondaryIndexDataStore implements
 	}
 
 	@Override
-	public void close()
-			throws Exception {
+	public void close() {
 		for (final Writer writer : writerCache.values()) {
 			writer.close();
 		}
